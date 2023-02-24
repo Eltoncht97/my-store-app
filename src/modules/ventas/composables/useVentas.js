@@ -27,9 +27,10 @@ const useVentas = () => {
     client: "",
     products: [],
     date: moment().format("yyyy-MM-DD"),
-    quantityProduct: 0,
+    quantityProduct: 1,
     discountProduct: 0,
     discountValue: 0,
+    subtotalProduct: computed(() => product.value && product.value.price * venta.value.quantityProduct - venta.value.discountProduct * venta.value.quantityProduct),
     discount: 0,
     paymentMethod: "",
     subtotal: computed(() =>
@@ -70,20 +71,20 @@ const useVentas = () => {
     }
   };
 
-  const createClientVenta = async ( data ) => {
+  const createClientVenta = async (data) => {
     // if(!isValidForm()) return
 
     // isLoading.value = true
     const resp = await store.dispatch('ventas/createClient', data)
-    if(resp.ok){
+    if (resp.ok) {
       Swal.fire(
         'Completado!',
         'Cliente creado exitosamente!',
         'success'
-        )
+      )
       // isLoading.value = false
       // loadClients()
-    }else {
+    } else {
       customAlert(
         "Error",
         "Hubo un problema al crear el cliente",
@@ -170,7 +171,7 @@ const useVentas = () => {
 
   const resetProduct = () => {
     product.value = null;
-    venta.value.quantityProduct = null;
+    venta.value.quantityProduct = 1;
     venta.value.discountProduct = 0;
   };
 

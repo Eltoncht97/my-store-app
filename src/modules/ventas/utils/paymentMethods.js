@@ -19,4 +19,9 @@ export const paymentMethods = [
     value: 'Tarjeta de Credito',
     label: 'Tarjeta de Credito'
   },
+  {
+    id: '5',
+    value: 'Tarjeta de Debito',
+    label: 'Tarjeta de Debito'
+  },
 ]

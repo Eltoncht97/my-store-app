@@ -4,7 +4,6 @@
       <TitleText text="Nueva Venta" />
       <button
         class="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
-        
         @click="openModal('newRecibo')"
       >
         Nuevo Pago
@@ -34,8 +33,14 @@
               +
             </button>
           </div>
-          <NewClientModal :showModal="showNewClientModal" @on:close="closeModal"/>
-          <NewReciboModal :showModal="showNewReciboModal" @on:close="closeModal"/>
+          <NewClientModal
+            :showModal="showNewClientModal"
+            @on:close="closeModal"
+          />
+          <NewReciboModal
+            :showModal="showNewReciboModal"
+            @on:close="closeModal"
+          />
           <p
             class="mt-2 text-sm text-red-600 dark:text-red-500"
             v-if="v$.client.$error"
@@ -110,7 +115,7 @@
           ></v-select>
         </div>
       </div>
-      <div class="grid gap-6 mb-6 md:grid-cols-3">
+      <div class="grid gap-6 mb-6 md:grid-cols-4">
         <div>
           <label
             for="quantity"
@@ -147,6 +152,21 @@
               required
             />
           </div>
+        </div>
+        <div>
+          <label
+            for="subtotalProduct"
+            class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+            >Subtotal</label
+          >
+          <input
+            type="number"
+            v-model="venta.subtotalProduct"
+            id="subtotalProduct"
+            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            placeholder="0"
+            disabled
+          />
         </div>
         <div class="flex items-end justify-center">
           <button
@@ -255,7 +275,7 @@
         class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
         >Metodo de Pago</label
       >
-      <div class="grid gap-6 mb-6 md:grid-cols-4">
+      <div :class="`grid gap-6 mb-6 md:grid-cols-${paymentMethods.length}`">
         <div
           class="flex items-center pl-4 rounded border border-gray-200 dark:border-gray-700"
           v-for="paymentMethod in paymentMethods"
@@ -297,7 +317,7 @@
 </template>
 
 <script>
-import { ref } from 'vue';
+import { ref } from "vue";
 import Card from "@/components/Card.vue";
 import CardHeader from "@/components/CardHeader.vue";
 import CardBody from "@/components/CardBody.vue";
@@ -305,30 +325,41 @@ import ProductsTable from "../components/ProductsTable.vue";
 import useVentas from "../composables/useVentas";
 import TitleText from "@/components/TitleText.vue";
 import Button from "@/components/Button.vue";
-import NewClientModal from '@/modules/clients/components/NewClientModal.vue';
-import NewReciboModal from '@/modules/recibos/components/NewReciboModal.vue';
+import NewClientModal from "@/modules/clients/components/NewClientModal.vue";
+import NewReciboModal from "@/modules/recibos/components/NewReciboModal.vue";
 
 export default {
-  components: { Card, CardHeader, CardBody, ProductsTable, TitleText, Button, NewClientModal, NewReciboModal },
+  components: {
+    Card,
+    CardHeader,
+    CardBody,
+    ProductsTable,
+    TitleText,
+    Button,
+    NewClientModal,
+    NewReciboModal,
+  },
   setup() {
-    const showNewClientModal = ref(false)
+    const showNewClientModal = ref(false);
 
-    const showNewReciboModal = ref(false)
+    const showNewReciboModal = ref(false);
 
     const openModal = (type) => {
-      if(type === 'newClient') showNewClientModal.value = true
-      if(type === 'newRecibo') showNewReciboModal.value = true
-    }
-    
+      if (type === "newClient") showNewClientModal.value = true;
+      if (type === "newRecibo") showNewReciboModal.value = true;
+    };
+
     const closeModal = (type) => {
-      if(type === 'newClient') showNewClientModal.value = false
-      if(type === 'newRecibo') showNewReciboModal.value = false
-    }
-    
+      if (type === "newClient") showNewClientModal.value = false;
+      if (type === "newRecibo") showNewReciboModal.value = false;
+    };
+
     const toggleModal = (type) => {
-      if(type === 'newClient') showNewClientModal.value = !showNewClientModal.value
-      if(type === 'newRecibo') showNewReciboModal.value = !showNewReciboModal.value
-    }
+      if (type === "newClient")
+        showNewClientModal.value = !showNewClientModal.value;
+      if (type === "newRecibo")
+        showNewReciboModal.value = !showNewReciboModal.value;
+    };
 
     const {
       addProduct,
