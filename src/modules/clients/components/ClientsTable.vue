@@ -8,7 +8,6 @@
         <th scope="col" class="py-3 px-6">Nombre</th>
         <th scope="col" class="py-3 px-6">Telefono</th>
         <th scope="col" class="py-3 px-6">Direccion</th>
-        <th scope="col" class="py-3 px-6">Status</th>
         <th scope="col" class="py-3 px-6 text-center">Opciones</th>
       </TableHead>
       <TableBody>

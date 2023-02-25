@@ -7,15 +7,6 @@
   </th>
   <td class="py-4 px-6">{{ client.phone }}</td>
   <td class="py-4 px-6">{{ client.address }}</td>
-  <td
-    class="py-4 px-6"
-    :class="{
-      'text-green-400 dark:text-green-500': client.active,
-      'text-red-400 dark:text-red-500': !client.active,
-    }"
-  >
-    {{ client.active ? "Activo" : "Inactivo" }}
-  </td>
   <td class="flex justify-center items-center py-4 px-6 space-x-3">
     <router-link
       :to="{ name: 'client-edit', params: { id: client.id } }"

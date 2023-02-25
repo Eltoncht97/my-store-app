@@ -10,9 +10,13 @@ export const getClient = (state) => {
 };
 
 export const getClientsPages = (state) => {
-  return Math.ceil(state.pagination.totalClients / 10);
+  return Math.ceil(state.pagination.totalClients / state.pagination.limit);
 };
 
 export const getTotalClients = (state) => {
   return state.pagination.totalClients;
 };
+
+export const getPagination = (state) => {
+  return state.pagination
+}

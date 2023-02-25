@@ -28,9 +28,25 @@
                 movimiento.state === 'No Conciliado',
             }"
           >
-            ${{ movimiento.monto > 0 ? movimiento.monto : movimiento.monto * -1 }}
+            ${{
+              movimiento.monto > 0 ? movimiento.monto : movimiento.monto * -1
+            }}
           </td>
         </TableRow>
+        <tr>
+          <th
+            class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+          ></th>
+          <td
+            scope="row"
+            class="py-4 pl-6 font-medium whitespace-nowrap dark:text-white text-right"
+          >
+            TOTAL:
+          </td>
+          <td class="py-4 px-6 font-medium text-right">
+            ${{ totalMovimientos }}
+          </td>
+        </tr>
       </TableBody>
     </Table>
   </template>
@@ -52,12 +68,12 @@ export default {
   },
   props: {
     movimientos: {
-      type: Array
-    }
+      type: Array,
+    },
   },
   setup() {
-    const { caja } = useCajas();
-    return { caja };
+    const { caja, totalMovimientos } = useCajas();
+    return { caja, totalMovimientos };
   },
 };
 </script>

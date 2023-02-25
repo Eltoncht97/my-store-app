@@ -12,8 +12,10 @@ const useClients = () => {
 
   const filterSaldo = ref("todos");
   const currentPage = ref(1);
+  // const limit = ref(5);
 
   const client = computed(() => store.getters["clients/getClient"]);
+  const pagination = computed(() => store.getters["clients/getPagination"]);
 
   const rules = computed(() => {
     return {
@@ -28,7 +30,8 @@ const useClients = () => {
 
   const loadClients = async () => {
     store.commit("ui/setLoading", true);
-    await store.dispatch("clients/loadClients", { page: currentPage.value });
+    console.log(pagination.value);
+    await store.dispatch("clients/loadClients", { page: currentPage.value, limit: pagination.value.limit });
     store.commit("ui/setLoading", false);
   };
 
@@ -113,6 +116,7 @@ const useClients = () => {
     filterSaldo,
     totalClients: computed(() => store.getters["clients/getTotalClients"]),
     totalPages: computed(() => store.getters["clients/getClientsPages"]),
+    pagination,
     v$,
 
     createClient,

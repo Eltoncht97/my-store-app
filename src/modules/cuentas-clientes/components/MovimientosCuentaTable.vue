@@ -21,14 +21,24 @@
           </td>
           <td
             class="py-4 px-6 font-medium text-right"
-            :class="{
-              'text-green-400 dark:text-green-500': movement.state === 'Conciliado',
-              'text-red-400 dark:text-red-500': movement.state === 'No Conciliado',
-            }"
           >
-            ${{ (movement.monto > 0) ? movement.monto : movement.monto  * -1}}
+            $ {{ (movement.monto > 0) ? movement.monto : movement.monto }}
           </td>
         </TableRow>
+        <tr>
+          <th
+            class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+          ></th>
+          <td
+            scope="row"
+            class="py-4 pl-6 font-medium whitespace-nowrap dark:text-white text-right"
+          >
+            TOTAL:
+          </td>
+          <td class="py-4 px-6 font-medium text-right">
+            ${{ totalMovimientos }}
+          </td>
+        </tr>
       </TableBody>
     </Table>
   </template>
@@ -50,8 +60,8 @@ export default {
   },
 
   setup() {
-    const { cuenta } = useCuentas();
-    return { cuenta };
+    const { cuenta, totalMovimientos } = useCuentas();
+    return { cuenta, totalMovimientos };
   },
 };
 </script>

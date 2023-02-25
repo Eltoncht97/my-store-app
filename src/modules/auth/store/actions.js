@@ -1,6 +1,3 @@
-// export const myAction = async ({ commit }) => {
-// }
-
 import pukisApi from "@/api/pukisApi";
 import authApi from "@/api/pukisApi";
 
@@ -15,7 +12,12 @@ export const createUser = async ({ commit }, user) => {
     });
     const { token, ...user } = data;
 
+    if (!data) {
+      return { ok: false, message: "Hubo un problema al crear el usuario." };
+    }
+    
     const response = await pukisApi.post("/cajas", { user });
+    
     if (!response.data) {
       return { ok: false, message: "Hubo un problema al crear la caja." };
     }

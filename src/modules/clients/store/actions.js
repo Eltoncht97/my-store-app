@@ -3,12 +3,12 @@ import pukisApi from "@/api/pukisApi";
 
 export const loadClients = async (
   { commit, state },
-  { page = 1, filterTxt = "", filterSaldo }
+  { page = 1, filterTxt = "", filterSaldo, limit=10 }
 ) => {
   try {
     commit("updateOffset", page);
     const response = await pukisApi.get(
-      `/clients?offset=${state.pagination.offset}&keyword=${filterTxt}&${
+      `/clients?limit=${limit}&offset=${state.pagination.offset}&keyword=${filterTxt}&${
         filterSaldo === "saldo" && "saldo=true"
       }`
     );

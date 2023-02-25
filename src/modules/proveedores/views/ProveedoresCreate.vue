@@ -21,15 +21,15 @@
         </div>
         <div>
           <Input
-            label="CUIL"
-            v-model="proveedor.cuil"
+            label="CUIT"
+            v-model="proveedor.cuit"
             placeholder="xx-xxxxxxxx-x"
           />
           <p
             class="mt-2 text-sm text-red-600 dark:text-red-500"
-            v-if="v$.cuil.$error"
+            v-if="v$.cuit.$error"
           >
-            <span class="font-medium">El CUIL es requerido</span>
+            <span class="font-medium">El CUIT es requerido</span>
           </p>
         </div>
         <div>

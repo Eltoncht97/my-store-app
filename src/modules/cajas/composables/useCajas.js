@@ -42,7 +42,8 @@ const useCajas = () => {
       await store.dispatch("cajas/getCaja", id);
     },
     loadInformeCaja,
-    informeData: computed(() => store.getters["cajas/getInformeData"])
+    informeData: computed(() => store.getters["cajas/getInformeData"]),
+    totalMovimientos: computed(() => store.getters["cajas/getTotalMovimientos"])
   };
 };
 

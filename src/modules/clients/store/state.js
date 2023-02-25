@@ -2,7 +2,8 @@ export default () => ({
   clients: [],
   client: null,
   pagination: {
-    totalClients: null,
+    limit: 5,
     offset: 0,
+    totalClients: 0,
   },
 });

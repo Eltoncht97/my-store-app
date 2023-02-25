@@ -18,7 +18,7 @@ const useProveedores = () => {
   const rules = computed(() => {
     return {
       name: { required },
-      cuil: { required, minLength: minLength(11), maxLength: maxLength(11) },
+      cuit: { minLength: minLength(11), maxLength: maxLength(11) },
       address: { required },
       phone: { required },
     };

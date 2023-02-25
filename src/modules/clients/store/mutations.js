@@ -37,5 +37,5 @@ export const setCountClients = (state, payload) => {
 };
 
 export const updateOffset = (state, page) => {
-  state.pagination.offset = (page - 1) * 10;
+  state.pagination.offset = (page - 1) * state.pagination.limit;
 };

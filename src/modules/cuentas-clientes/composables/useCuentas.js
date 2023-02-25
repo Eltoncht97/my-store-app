@@ -1,7 +1,7 @@
 import { computed } from "vue"
 import { useStore } from "vuex"
 
-const useCuentas = () => {
+const useCuentasCorrientes = () => {
   const store = useStore()
 
   const loadCuenta = async ( id ) => {
@@ -10,8 +10,9 @@ const useCuentas = () => {
 
   return {
     loadCuenta,
-    cuenta: computed(() => store.getters['cuentasClientes/getCuenta'])
+    cuenta: computed(() => store.getters['cuentasClientes/getCuenta']),
+    totalMovimientos: computed(() => store.getters['cuentasClientes/getTotalMovimientos'])
   }
 }
 
-export default useCuentas;
+export default useCuentasCorrientes;

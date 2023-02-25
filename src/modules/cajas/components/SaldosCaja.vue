@@ -28,19 +28,19 @@
           scope="row"
           class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white"
         >
-          Credito
+          T. Debito
         </th>
-        <td class="py-4 px-6 text-right">${{ caja.credito }}</td>
+        <td class="py-4 px-6 text-right">$0</td>
       </TableRow>
-      <!-- <TableRow>
+      <TableRow>
         <th
           scope="row"
           class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white"
         >
-          Cuenta Corriente
+          T. Credito
         </th>
-        <td class="py-4 px-6 text-right">${{ caja.cuentaCorriente }}</td>
-      </TableRow> -->
+        <td class="py-4 px-6 text-right">${{ caja.credito }}</td>
+      </TableRow>
     </TableBody>
 
     <TableFooter>
