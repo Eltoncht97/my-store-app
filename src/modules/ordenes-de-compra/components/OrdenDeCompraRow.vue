@@ -7,11 +7,10 @@
   </th>
   <td class="py-4 px-6">{{ ordenDeCompra.proveedor.name }}</td>
   <td class="py-4 px-6">{{ $filters.formatDate(ordenDeCompra.date) }}</td>
-  <!-- <td class="py-4 px-6">{{ ordenDeCompra.paymentMethod }}</td> -->
   <td class="py-4 px-6">${{ ordenDeCompra.total }}</td>
   <td class="flex justify-center items-center py-4 px-6 space-x-3">
     <router-link
-      :to="{ name: 'venta-show', params: { id: ordenDeCompra.id } }"
+      :to="{ name: 'orden-de-compra-show', params: { id: ordenDeCompra.id } }"
       class="font-medium text-blue-600 dark:text-blue-500 hover:underline"
     >
       <ViewIcon />

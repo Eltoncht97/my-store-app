@@ -82,8 +82,6 @@ const useVentas = () => {
         'Cliente creado exitosamente!',
         'success'
       )
-      // isLoading.value = false
-      // loadClients()
     } else {
       customAlert(
         "Error",
@@ -91,7 +89,6 @@ const useVentas = () => {
         "warning"
       )
     }
-    // isLoading.value = false
   }
 
   const addProduct = () => {
@@ -180,7 +177,7 @@ const useVentas = () => {
       client: "",
       products: [],
       date: "",
-      quantityProduct: null,
+      quantityProduct: 1,
       discountProduct: 0,
       discount: 0,
     };
@@ -237,13 +234,9 @@ const useVentas = () => {
 
   const calcDiscount = () => {
     if (isDiscountPercentage.value) {
-      venta.value.discount = Math.round((venta.value.subtotal * venta.value.discountValue) / 100)
-      // venta.value.total =
-      //   venta.value.subtotal -
-      //   Math.round((venta.value.subtotal * venta.value.discountValue) / 100);
+      venta.value.discount = Math.round((venta.value.subtotal * venta.value.discountValue) / 100);
     } else {
-      venta.value.discount = venta.value.discountValue
-      // venta.value.total = venta.value.subtotal - venta.value.discountValue;
+      venta.value.discount = venta.value.discountValue;
     }
   };
 

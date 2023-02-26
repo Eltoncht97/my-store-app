@@ -6,7 +6,7 @@
       <th scope="col" class="py-3 px-6">Categoria</th>
       <th scope="col" class="py-3 px-6">Stock</th>
       <th scope="col" class="py-3 px-6">Costo</th>
-      <th scope="col" class="py-3 px-6">Utilidades</th>
+      <th scope="col" class="py-3 px-6">Ganancia</th>
       <th scope="col" class="py-3 px-6">Precio</th>
       <th scope="col" class="py-3 px-6">Status</th>
       <th scope="col" class="py-3 px-6">Opciones</th>

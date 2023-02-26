@@ -64,11 +64,9 @@ export const updateUser = async ({ commit }, user) => {
 
     if (!response.data) {
       commit("setUser", null);
-      return;
+      return { ok: false, message: "Hubo un error al actualizar el usuario" };
     }
-
-    commit("setUser", response.data);
-
+    
     return { ok: true };
   } catch (error) {
     console.log(error);

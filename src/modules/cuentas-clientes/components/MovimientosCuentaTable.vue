@@ -19,28 +19,20 @@
           >
             {{ movement.description }}
           </td>
-          <td
-            class="py-4 px-6 font-medium text-right"
-          >
-            $ {{ (movement.monto > 0) ? movement.monto : movement.monto }}
+          <td class="py-4 px-6 font-medium text-right">
+            $ {{ movement.monto > 0 ? movement.monto : movement.monto }}
           </td>
         </TableRow>
-        <tr>
-          <th
-            class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-          ></th>
-          <td
-            scope="row"
-            class="py-4 pl-6 font-medium whitespace-nowrap dark:text-white text-right"
-          >
-            TOTAL:
-          </td>
-          <td class="py-4 px-6 font-medium text-right">
-            ${{ totalMovimientos }}
-          </td>
-        </tr>
       </TableBody>
     </Table>
+    <div class="flex justify-end">
+      <p
+        class="py-4 pl-6 font-medium whitespace-nowrap dark:text-white text-right"
+      >
+        TOTAL:
+      </p>
+      <p class="py-4 px-6 font-medium text-right">${{ totalMovimientos }}</p>
+    </div>
   </template>
   <div v-else>La caja aun no posee movimientos</div>
 </template>
@@ -50,7 +42,7 @@ import Table from "../../../components/Table.vue";
 import TableHead from "../../../components/TableHead.vue";
 import TableBody from "../../../components/TableBody.vue";
 import TableRow from "../../../components/TableRow.vue";
-import useCuentas from '../composables/useCuentas';
+import useCuentas from "../composables/useCuentas";
 export default {
   components: {
     Table,

@@ -19,7 +19,7 @@ export const loadRecibos = async ({ commit }) => {
   }
 };
 
-export const loadRecibo = async ({ commit }, id) => {
+export const getRecibo = async ({ commit }, id) => {
   try {
     const response = await pukisApi.get(`/recibos/${id}`);
 
@@ -39,7 +39,7 @@ export const loadRecibo = async ({ commit }, id) => {
 
 export const createRecibo = async ({ commit }, reciboData) => {
   const { client, ...restData } = reciboData;
-  console.log({ ...restData });
+
   try {
     const response = await pukisApi.post("/recibos", {
       clientId: client.id,

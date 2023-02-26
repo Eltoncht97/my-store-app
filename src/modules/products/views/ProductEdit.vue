@@ -54,8 +54,8 @@
         </div>
         <Input label="IVA" v-model.number="product.iva" />
         <Input label="Costo Total" v-model.number="product.costPrice" />
-        <Input label="Utilidades %" v-model.number="product.utilitiesPercentage" @change="calcUtilities" />
-        <Input label="Utilidades" v-model.number="product.utilities" @change="calcUtilitiesPercentage" />
+        <Input label="Ganancias %" v-model.number="product.utilitiesPercentage" @change="calcUtilities" />
+        <Input label="Ganancias" v-model.number="product.utilities" @change="calcUtilitiesPercentage" />
         <Input label="Precio de Venta" v-model.number="product.price" disabled />
         <div>
           <label

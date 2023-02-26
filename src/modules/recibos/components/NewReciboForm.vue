@@ -105,7 +105,6 @@
 <script>
 import Input from "@/components/Input.vue";
 import useRecibos from "../composables/useRecibos";
-// import useClients from "@/modules/clients/composables/useClients";
 import { paymentMethods } from "@/modules/ventas/utils/paymentMethods";
 import useVentas from '@/modules/ventas/composables/useVentas';
 
@@ -113,7 +112,6 @@ export default {
   components: { Input },
   setup() {
     const { recibo, createRecibo, resetRecibo, v$ } = useRecibos();
-    // const { loadClients, clients } = useClients();
     const { getClients, clients } = useVentas();
 
     resetRecibo();

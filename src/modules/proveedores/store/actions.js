@@ -31,7 +31,7 @@ export const getProveedor = async ({ commit }, id) => {
     if (!response.data) {
       return {
         ok: false,
-        message: "Hubo un error al guardar los datos del proveedor",
+        message: "Hubo un error al traer los datos del proveedor",
       };
     }
 
@@ -41,7 +41,7 @@ export const getProveedor = async ({ commit }, id) => {
     console.log(error);
     return {
       ok: false,
-      message: "Hubo un error al guardar los datos del proveedor",
+      message: "Hubo un error al taer los datos del proveedor",
     };
   }
 };

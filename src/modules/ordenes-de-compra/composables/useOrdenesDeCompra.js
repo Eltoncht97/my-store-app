@@ -5,6 +5,9 @@ import { ref } from "vue";
 import { computed } from "vue";
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
+import useVuelidate from "@vuelidate/core";
+import { required, minValue } from "@vuelidate/validators";
+import { isValidForm } from "@/utils/isValidForm";
 
 const useOrdenesDeCompra = () => {
   const store = useStore();
@@ -19,10 +22,16 @@ const useOrdenesDeCompra = () => {
     products: [],
     factura: "",
     date: moment().format("yyyy-MM-DD"),
-    quantity: null,
+    quantityProduct: 1,
     discountProduct: null,
     discountValue: null,
-    discount: null,
+    subtotalProduct: computed(
+      () =>
+        product.value &&
+        product.value.price * ingreso.value.quantityProduct -
+          ingreso.value.discountProduct * ingreso.value.quantityProduct
+    ),
+    discount: 0,
     subtotal: computed(() =>
       ingreso.value.products
         .map((p) => p.total)
@@ -37,6 +46,19 @@ const useOrdenesDeCompra = () => {
 
   const products = computed(() => store.getters["ventas/getProducts"]);
 
+  const rules = computed(() => {
+    return {
+      proveedor: { required },
+      date: { required },
+      products: { required },
+      factura: { required },
+      subtotal: { required, minValue: minValue(1) },
+      total: { required, minValue: minValue(1) },
+    };
+  });
+
+  const v$ = useVuelidate(rules, ingreso.value);
+
   const loadOrdenesDeCompra = async () => {
     store.commit("ui/setLoading", true);
     const { ok, message } = await store.dispatch(
@@ -48,9 +70,21 @@ const useOrdenesDeCompra = () => {
     }
   };
 
+  const loadOrdenDeCompra = async (id) => {
+    store.commit("ui/setLoading", true);
+    const { ok, message } = await store.dispatch(
+      "ordenesDeCompra/getOrdenDeCompra",
+      id
+    );
+    store.commit("ui/setLoading", false);
+    if (!ok) {
+      customAlert("Error", message, "warning");
+    }
+  };
+
   const resetProduct = () => {
     product.value = null;
-    ingreso.value.quantityProduct = null;
+    ingreso.value.quantityProduct = 1;
     ingreso.value.discountProduct = 0;
   };
 
@@ -135,7 +169,7 @@ const useOrdenesDeCompra = () => {
   };
 
   const createIngreso = async () => {
-    // if (!isValidForm(rulesv$)) return;
+    if (!isValidForm(rules.value, v$.value)) return;
 
     const resp = await store.dispatch(
       "ordenesDeCompra/createIngreso",
@@ -155,7 +189,7 @@ const useOrdenesDeCompra = () => {
       proveedor: "",
       products: [],
       date: "",
-      quantityProduct: null,
+      quantityProduct: 1,
       discountProduct: 0,
       discount: 0,
     };
@@ -167,6 +201,8 @@ const useOrdenesDeCompra = () => {
     ordenesDeCompra,
     product,
     isPDiscountPercentage,
+    v$,
+    ordenDeCompra: computed(() => store.getters["ordenesDeCompra/getOrdenDeCompra"]),
     editProduct,
     updateProduct,
     deleteProduct,
@@ -177,6 +213,7 @@ const useOrdenesDeCompra = () => {
     togglePDiscountType: () =>
       (isPDiscountPercentage.value = !isPDiscountPercentage.value),
     createIngreso,
+    loadOrdenDeCompra,
   };
 };
 

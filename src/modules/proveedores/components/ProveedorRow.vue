@@ -7,8 +7,14 @@
   </th>
   <td class="py-4 px-6">{{ proveedor.address }}</td>
   <td class="py-4 px-6">{{ proveedor.phone }}</td>
-  <td class="py-4 px-6">
-    {{ proveedor.account.saldo }}
+  <td
+    class="py-4 px-6"
+    :class="{
+      'text-green-400 dark:text-green-500': proveedor.account.saldo > 0,
+      'text-red-400 dark:text-red-500': proveedor.account.saldo < 0,
+    }"
+  >
+  ${{ (proveedor.saldo > 0) ? proveedor.saldo : proveedor.saldo  * -1}}
   </td>
   <td class="flex justify-center items-center py-4 px-6 space-x-3">
     <router-link

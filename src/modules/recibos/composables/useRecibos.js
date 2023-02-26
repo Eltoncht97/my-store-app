@@ -1,4 +1,3 @@
-import { ref } from "vue";
 import { computed } from "vue";
 import { useStore } from "vuex";
 import useVuelidate from "@vuelidate/core";
@@ -11,11 +10,7 @@ const useRecibos = () => {
   const store = useStore();
   const router = useRouter();
 
-  const recibo = ref({
-    client: "",
-    paymentMethod: "",
-    total: null,
-  });
+  const recibo = computed(() => store.getters["recibos/getRecibo"])
 
   const rules = computed(() => {
     return {
@@ -33,8 +28,16 @@ const useRecibos = () => {
     store.commit("recibos/filterRecibos", filterTxt);
 
   const loadRecibos = async () => {
+    store.commit("ui/setLoading", true);
     await store.dispatch("recibos/loadRecibos");
+    store.commit("ui/setLoading", false);
   };
+  
+  const loadRecibo = async (id) => {
+    store.commit("ui/setLoading", true);
+    await store.dispatch("recibos/getRecibo", id);
+    store.commit("ui/setLoading", false);
+  }
 
   const createRecibo = async (redirect=true) => {
     if (!isValidForm(rules.value, v$.value)) return;
@@ -46,13 +49,7 @@ const useRecibos = () => {
     }
   };
 
-  const resetRecibo = () => {
-    recibo.value = {
-      client: "",
-      paymentMethod: "",
-      total: null,
-    };
-  };
+  const resetRecibo = () => store.commit("recibos/resetRecibo")
 
   return {
     recibo,
@@ -61,6 +58,7 @@ const useRecibos = () => {
 
     createRecibo,
     loadRecibos,
+    loadRecibo,
     filterRecibos,
     resetRecibo,
   };

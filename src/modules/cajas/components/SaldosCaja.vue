@@ -30,7 +30,7 @@
         >
           T. Debito
         </th>
-        <td class="py-4 px-6 text-right">$0</td>
+        <td class="py-4 px-6 text-right">${{ caja.debito }}</td>
       </TableRow>
       <TableRow>
         <th

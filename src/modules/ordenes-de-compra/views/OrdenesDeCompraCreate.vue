@@ -69,7 +69,7 @@
           ></v-select>
         </div>
       </div>
-      <div class="grid gap-6 mb-6 md:grid-cols-4">
+      <div class="grid gap-6 mb-6 md:grid-cols-5">
         <div>
           <label
             for="quantity"
@@ -123,6 +123,21 @@
             <option value="IVA 21">IVA 21%</option>
             <option value="IVA 27.5">IVA 27.5%</option>
           </select>
+        </div>
+        <div>
+          <label
+            for="quantity"
+            class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+            >Subtotal</label
+          >
+          <input
+            type="number"
+            id="quantity"
+            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            placeholder="0"
+            required
+            v-model="ingreso.subtotalProduct"
+          />
         </div>
         <div class="flex items-end justify-center">
           <button
@@ -178,7 +193,7 @@
       </div>
       <div class="py-2">
         <Button text="Guardar" @click="createIngreso" />
-        <Button className="danger" text="Cancelar" to="recibos-list" />
+        <Button className="danger" text="Cancelar" to="ordenes-de-compra-list" />
       </div>
     </CardBody>
   </Card>

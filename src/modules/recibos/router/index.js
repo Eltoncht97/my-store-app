@@ -14,6 +14,14 @@ export default {
         ),
     },
     {
+      path: "/recibos/:id",
+      name: "recibo-show",
+      component: () =>
+        import(
+          /* webpackChunkName: "Recibo Show" */ "@/modules/recibos/views/ReciboShow.vue"
+        ),
+    },
+    {
       path: "/recibos/crear",
       name: "recibo-create",
       component: () =>

@@ -21,7 +21,66 @@ export const getOrdenesDeCompra = async ({ commit }) => {
   }
 };
 
+export const getOrdenDeCompra = async ({commit}, id) => {
+  try {
+    const response = await pukisApi.get(`/ordenes-ingreso/${id}`);
+    if (!response.data) {
+      return {
+        ok: false,
+        message: "Hubo un error al taer los datos de la orden de ingreso",
+      };
+    }
+
+    commit("setOrdenDeIngreso", response.data);
+    return { ok: true };
+  } catch (error) {
+    console.log(error);
+    return {
+      ok: false,
+      message: "Hubo un error al traer los datos de la orden de ingreso",
+    };
+  }
+} 
+
 export const createIngreso = async (_, data) => {
   //peticion axios de create
   console.log(data);
+
+  try {
+    const { proveedor, date, factura, subtotal, discount, total, products } =
+      { ...data };
+
+    const ingresoData = {
+      proveedorId: proveedor.id,
+      date,
+      factura,
+      subtotal,
+      discount,
+      total,
+      products: products.map((p) => ({
+        product: p.id,
+        price: p.price,
+        quantity: p.quantity,
+        subtotal: p.subtotal,
+        discount: p.discount,
+        total: p.total,
+      })),
+    };
+    const response = await pukisApi.post("/ordenes-ingreso", ingresoData);
+
+    if (!response.data) {
+      return {
+        ok: false,
+        message: "Hubo un error al crear la orden de compra/ingreso",
+      };
+    }
+
+    return { ok: true };
+  } catch (error) {
+    console.log(error);
+    return {
+      ok: false,
+      message: "Hubo un error al crear la orden de compra/ingreso",
+    };
+  }
 };

@@ -1,3 +1,4 @@
 export default () => ({
-  ordenesDeCompra: []
+  ordenesDeCompra: [],
+  ordenDeCompra: null
 })

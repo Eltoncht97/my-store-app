@@ -10,31 +10,46 @@
       </router-link>
     </CardHeader>
     <CardBody>
-      <SearchInput @on:filter="filterRecibos" />
-      <RecibosTable />
+      <Loading v-if="isLoading" />
+      <template v-else>
+        <SearchInput @on:filter="filterRecibos" />
+        <RecibosTable />
+      </template>
     </CardBody>
   </Card>
 </template>
 
 <script>
-import Card from '@/components/Card.vue'
-import CardHeader from '@/components/CardHeader.vue'
-import CardBody from '@/components/CardBody.vue'
-import TitleText from '@/components/TitleText.vue'
-import useRecibos from '../composables/useRecibos'
-import SearchInput from '@/components/SearchInput.vue'
-import RecibosTable from '../components/RecibosTable.vue'
+import Card from "@/components/Card.vue";
+import CardHeader from "@/components/CardHeader.vue";
+import CardBody from "@/components/CardBody.vue";
+import TitleText from "@/components/TitleText.vue";
+import useRecibos from "../composables/useRecibos";
+import SearchInput from "@/components/SearchInput.vue";
+import RecibosTable from "../components/RecibosTable.vue";
+import Loading from "@/components/Loading.vue";
+import useUI from "@/modules/dashboard/composables/useUI";
 
 export default {
-  components: { Card, CardHeader, CardBody, RecibosTable, TitleText, SearchInput },
+  components: {
+    Card,
+    CardHeader,
+    CardBody,
+    RecibosTable,
+    TitleText,
+    SearchInput,
+    Loading,
+  },
   setup() {
-    const { loadRecibos, filterRecibos } = useRecibos()
-    
-    loadRecibos()
+    const { loadRecibos, filterRecibos } = useRecibos();
+    const { isLoading } = useUI();
+
+    loadRecibos();
 
     return {
-      filterRecibos
-    }
+      isLoading,
+      filterRecibos,
+    };
   },
-}
+};
 </script>

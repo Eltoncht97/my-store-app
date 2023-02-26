@@ -7,15 +7,6 @@
   </th>
   <td class="py-4 px-6">{{ user.email }}</td>
   <td class="py-4 px-6">{{ user.roles }}</td>
-  <td
-    class="py-4 px-6"
-    :class="{
-      'text-green-400 dark:text-green-500': user.isActive,
-      'text-red-400 dark:text-red-500': !user.isActive,
-    }"
-  >
-    {{ user.isActive ? "Activo" : "Inactivo" }}
-  </td>
   <td class="flex justify-center items-center py-4 px-6 space-x-3">
     <router-link
       :to="{ name: 'user-edit', params: { id: user.id } }"

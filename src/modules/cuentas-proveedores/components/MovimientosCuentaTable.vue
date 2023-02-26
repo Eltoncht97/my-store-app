@@ -31,6 +31,16 @@
         </TableRow>
       </TableBody>
     </Table>
+    <div class="flex justify-end">
+      <p
+        class="py-4 pl-6 font-medium whitespace-nowrap dark:text-white text-right"
+      >
+        TOTAL:
+      </p>
+      <p class="py-4 px-6 font-medium text-right">
+        ${{ totalMovimientos }}
+      </p>
+    </div>
   </template>
   <div v-else>La cuenta aun no posee movimientos</div>
 </template>
@@ -50,8 +60,8 @@ export default {
   },
 
   setup() {
-    const { cuenta } = useCuentasProveedores();
-    return { cuenta };
+    const { cuenta, totalMovimientos  } = useCuentasProveedores();
+    return { cuenta, totalMovimientos };
   },
 };
 </script>

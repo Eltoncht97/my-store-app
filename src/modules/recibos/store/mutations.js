@@ -16,3 +16,11 @@ export const filterRecibos = (state, filterTxt) => {
 export const setRecibo = (state, recibo) => {
   state.recibo = recibo;
 };
+
+export const resetRecibo = (state) => {
+  state.recibo = {
+    client: "",
+    paymentMethod: "",
+    total: null,
+  };
+}

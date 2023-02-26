@@ -160,7 +160,7 @@
         <div>
           <Input
             type="number"
-            label="Utilidades %"
+            label="Ganancias %"
             v-model.number="product.utilitiesPercentage"
             @change="calcUtilities"
           />
@@ -168,13 +168,13 @@
             class="mt-2 text-sm text-red-600 dark:text-red-500"
             v-if="v$.utilitiesPercentage.$error"
           >
-            <span class="font-medium">Las Utilidades % son requeridas</span>
+            <span class="font-medium">Las Ganancias % son requeridas</span>
           </p>
         </div>
         <div>
           <Input
             type="number"
-            label="Utilidades"
+            label="Ganancias"
             v-model.number="product.utilities"
             @change="calcUtilitiesPercentage"
           />
@@ -182,7 +182,7 @@
             class="mt-2 text-sm text-red-600 dark:text-red-500"
             v-if="v$.utilities.$error"
           >
-            <span class="font-medium">Las Utilidades son requeridas</span>
+            <span class="font-medium">La ganancia es requerida</span>
           </p>
         </div>
         <div>

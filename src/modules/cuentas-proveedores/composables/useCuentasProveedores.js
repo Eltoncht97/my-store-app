@@ -10,7 +10,8 @@ const useCuentasProveedores = () => {
 
   return {
     loadCuenta,
-    cuenta: computed(() => store.getters['cuentasProveedores/getCuenta'])
+    cuenta: computed(() => store.getters['cuentasProveedores/getCuenta']),
+    totalMovimientos: computed(() => store.getters['cuentasProveedores/getTotalMovimientos']),
   }
 }
 
