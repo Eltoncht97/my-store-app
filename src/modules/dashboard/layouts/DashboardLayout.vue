@@ -1,5 +1,5 @@
 <template>
-  <div class="h-screen flex">
+  <div class="h-screen flex uppercase">
     <div :class="`md:block w-1/6 h-full bg-gray-900 ${open ? 'block' : 'hidden'}`">
       <div class="flex items-center justify-center mt-5 text-white">
         <router-link :to="{ name: 'venta-create' }" class="flex items-center">

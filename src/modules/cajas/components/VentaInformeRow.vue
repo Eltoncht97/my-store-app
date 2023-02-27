@@ -9,16 +9,17 @@
   <td class="py-4 px-6">{{ venta.paymentMethod }}</td>
   <td class="py-4 px-6">${{ venta.total }}</td>
   <td class="py-4 px-6">Venta</td>
-  <td class="flex items-center py-4 px-6 space-x-3">
+  <td class="flex items-center justify-center py-4 px-6 space-x-3">
     <router-link
       :to="{ name: 'venta-show', params: { id: venta.id } }"
       class="font-medium text-blue-600 dark:text-blue-500 hover:underline"
-      >Ver</router-link
-    >
+      ><ViewIcon
+    /></router-link>
   </td>
 </template>
 
 <script>
+import ViewIcon from "@/components/icons/ViewIcon.vue";
 
 export default {
   props: {
@@ -27,7 +28,7 @@ export default {
       required: true,
     },
   },
-  setup() {
-  },
+  components: { ViewIcon },
+  setup() {},
 };
 </script>

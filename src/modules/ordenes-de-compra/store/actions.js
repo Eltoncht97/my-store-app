@@ -21,7 +21,7 @@ export const getOrdenesDeCompra = async ({ commit }) => {
   }
 };
 
-export const getOrdenDeCompra = async ({commit}, id) => {
+export const getOrdenDeCompra = async ({ commit }, id) => {
   try {
     const response = await pukisApi.get(`/ordenes-ingreso/${id}`);
     if (!response.data) {
@@ -40,15 +40,16 @@ export const getOrdenDeCompra = async ({commit}, id) => {
       message: "Hubo un error al traer los datos de la orden de ingreso",
     };
   }
-} 
+};
 
 export const createIngreso = async (_, data) => {
   //peticion axios de create
   console.log(data);
 
   try {
-    const { proveedor, date, factura, subtotal, discount, total, products } =
-      { ...data };
+    const { proveedor, date, factura, subtotal, discount, total, products } = {
+      ...data,
+    };
 
     const ingresoData = {
       proveedorId: proveedor.id,
@@ -64,6 +65,8 @@ export const createIngreso = async (_, data) => {
         subtotal: p.subtotal,
         discount: p.discount,
         total: p.total,
+        impuestos: p.impuestos,
+        iva: p.iva,
       })),
     };
     const response = await pukisApi.post("/ordenes-ingreso", ingresoData);

@@ -1,6 +1,6 @@
 import { ref, computed } from "vue";
 import { useStore } from "vuex";
-import moment from 'moment';
+import moment from "moment";
 import { confirmDelete, successAlert } from "../utils/alerts";
 
 const useCajas = () => {
@@ -20,9 +20,13 @@ const useCajas = () => {
   };
 
   const loadInformeCaja = async (dates) => {
-    const formatedDates = {...dates}
-    formatedDates.startDate = `${moment(formatedDates.startDate).format('MM-DD-YYYY')}T00:00:00Z`
-    formatedDates.endDate = `${moment(formatedDates.endDate).format('MM-DD-YYYY')}T23:59:59Z`
+    const formatedDates = { ...dates };
+    formatedDates.startDate = `${moment(formatedDates.startDate).format(
+      "MM-DD-YYYY"
+    )}T00:00:00Z`;
+    formatedDates.endDate = `${moment(formatedDates.endDate).format(
+      "MM-DD-YYYY"
+    )}T23:59:59Z`;
     console.log(formatedDates);
     //del token sacara el usuario y con el la caja para los movimientos
     await store.dispatch("cajas/getInformeCaja", formatedDates);
@@ -43,7 +47,13 @@ const useCajas = () => {
     },
     loadInformeCaja,
     informeData: computed(() => store.getters["cajas/getInformeData"]),
-    totalMovimientos: computed(() => store.getters["cajas/getTotalMovimientos"])
+    totalMovimientos: computed(
+      () => store.getters["cajas/getTotalMovimientos"]
+    ),
+    totalMovimientosInforme: computed(
+      () => store.getters["cajas/getTotalMovimientosInforme"]
+    ),
+    resetCaja: () => store.commit("cajas/resetCaja"),
   };
 };
 

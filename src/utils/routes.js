@@ -37,6 +37,11 @@ const routes = [
     icon: "fa-vault",
   },
   {
+    label: "Informe de Cajas",
+    route: "caja-informe",
+    icon: "fa-vault",
+  },
+  {
     label: "Recibos",
     route: "recibos-list",
     icon: "fa-vault",

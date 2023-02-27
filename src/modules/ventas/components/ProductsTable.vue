@@ -5,13 +5,13 @@
         class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400"
       >
         <tr>
-          <th scope="col" class="py-3 px-6">Cantidad</th>
-          <th scope="col" class="py-3 px-6">Producto</th>
-          <th scope="col" class="py-3 px-6">Precio u.</th>
-          <th scope="col" class="py-3 px-6">Subtotal</th>
-          <th scope="col" class="py-3 px-6">Descuento</th>
-          <th scope="col" class="py-3 px-6">Total</th>
-          <th scope="col" class="py-3 px-6 text-center" v-if="!hiddenOptions">
+          <th scope="col" class="py-3 px-3">Cantidad</th>
+          <th scope="col" class="py-3 px-3">Producto</th>
+          <th scope="col" class="py-3 px-3">Precio u.</th>
+          <th scope="col" class="py-3 px-3">Subtotal</th>
+          <th scope="col" class="py-3 px-3">Descuento</th>
+          <th scope="col" class="py-3 px-3">Total</th>
+          <th scope="col" class="py-3 px-3 text-center" v-if="!hiddenOptions">
             Opciones
           </th>
         </tr>
@@ -37,14 +37,14 @@
               @click="$emit('on:edit', product.id)"
               class="font-medium text-blue-600 dark:text-blue-500 hover:underline mr-2"
             >
-              Edit
+              <EditIcon />
             </button>
             <button
               v-if="!isEdit"
               @click="$emit('on:delete', product.id)"
               class="font-medium text-red-600 dark:text-red-500 hover:underline"
             >
-              Delete
+              <DeleteIcon />
             </button>
           </td>
         </TableRow>
@@ -57,6 +57,8 @@
 import useVentas from "../composables/useVentas";
 import TableBody from "@/components/TableBody.vue";
 import TableRow from "@/components/TableRow.vue";
+import DeleteIcon from "@/components/icons/DeleteIcon.vue";
+import EditIcon from "@/components/icons/EditIcon.vue";
 
 export default {
   props: {
@@ -75,6 +77,6 @@ export default {
       isEdit,
     };
   },
-  components: { TableBody, TableRow },
+  components: { TableBody, TableRow, DeleteIcon, EditIcon },
 };
 </script>

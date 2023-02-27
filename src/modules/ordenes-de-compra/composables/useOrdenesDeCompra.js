@@ -1,36 +1,46 @@
-import { customAlert } from "@/utils/customSweetAlerts";
-// import { isValidForm } from "@/utils/isValidForm";
-import moment from "moment";
-import { ref } from "vue";
-import { computed } from "vue";
-import { useRouter } from "vue-router";
+import { ref, computed } from "vue";
 import { useStore } from "vuex";
+import { useRouter } from "vue-router";
+import moment from "moment";
 import useVuelidate from "@vuelidate/core";
 import { required, minValue } from "@vuelidate/validators";
+
+import { customAlert } from "@/utils/customSweetAlerts";
 import { isValidForm } from "@/utils/isValidForm";
+import { getIVAValue } from "@/utils/getIvaValue";
 
 const useOrdenesDeCompra = () => {
   const store = useStore();
   const router = useRouter();
 
+  const product = ref(null);
+  const isEdit = ref(false);
+  const isPDiscountPercentage = ref(false);
+
   const ordenesDeCompra = computed(
     () => store.getters["ordenesDeCompra/getOrdenesDeCompra"]
   );
+
+  const ordenDeCompra = computed(
+    () => store.getters["ordenesDeCompra/getOrdenDeCompra"]
+  );
+
+  const products = computed(() => store.getters["ventas/getProducts"]);
+
+  const productToAdd = ref({
+    cantidad: 1,
+    descuentoValue: 0,
+    descuento: 0,
+    subtotal: computed(() => product.value && calcSubtotalProduct()),
+    iva: "IVA 21",
+  });
 
   const ingreso = ref({
     proveedor: null,
     products: [],
     factura: "",
     date: moment().format("yyyy-MM-DD"),
-    quantityProduct: 1,
-    discountProduct: null,
     discountValue: null,
-    subtotalProduct: computed(
-      () =>
-        product.value &&
-        product.value.price * ingreso.value.quantityProduct -
-          ingreso.value.discountProduct * ingreso.value.quantityProduct
-    ),
     discount: 0,
     subtotal: computed(() =>
       ingreso.value.products
@@ -39,12 +49,6 @@ const useOrdenesDeCompra = () => {
     ),
     total: computed(() => ingreso.value.subtotal - ingreso.value.discount),
   });
-
-  const isPDiscountPercentage = ref(false);
-  const isEdit = ref(false);
-  const product = ref(null);
-
-  const products = computed(() => store.getters["ventas/getProducts"]);
 
   const rules = computed(() => {
     return {
@@ -82,10 +86,52 @@ const useOrdenesDeCompra = () => {
     }
   };
 
+  const togglePDiscountType = () => {
+    isPDiscountPercentage.value = !isPDiscountPercentage.value;
+    calcDiscountProduct();
+  };
+
+  const calcSubtotalProduct = () => {
+    calcDiscountProduct();
+    return (
+      product.value.costWithoutIva * productToAdd.value.cantidad -
+      productToAdd.value.descuento * productToAdd.value.cantidad
+    );
+  };
+
+  const calcDiscountProduct = () => {
+    if (isPDiscountPercentage.value) {
+      productToAdd.value.descuento = Math.round(
+        (product.value.costWithoutIva * productToAdd.value.descuentoValue) / 100
+      );
+    } else {
+      productToAdd.value.descuento = productToAdd.value.descuentoValue;
+    }
+  };
+
+  const calcImpuestosProduct = (subtotal, discount, ivaType) => {
+    const p = subtotal - discount;
+    return (p * getIVAValue(ivaType)) / 100;
+  };
+
   const resetProduct = () => {
     product.value = null;
-    ingreso.value.quantityProduct = 1;
-    ingreso.value.discountProduct = 0;
+    productToAdd.value = {
+      cantidad: 1,
+      descuentoValue: 0,
+      descuento: 0,
+      subtotal: computed(() => product.value && calcSubtotalProduct()),
+    };
+  };
+
+  const resetFormulario = () => {
+    ingreso.value = {
+      proveedor: "",
+      products: [],
+      date: "",
+      discount: 0,
+    };
+    product.value = null;
   };
 
   const addProduct = () => {
@@ -98,28 +144,24 @@ const useOrdenesDeCompra = () => {
       );
     }
 
-    const productToAdd = {
+    const productAdd = {
       id: product.value.id,
       name: product.value.name,
-      price: Math.ceil(product.value.costPrice),
-      quantity: ingreso.value.quantityProduct,
+      price: product.value.costWithoutIva,
+      quantity: productToAdd.value.cantidad,
+      iva: product.value.ivaType,
+      subtotal: productToAdd.value.cantidad * product.value.costWithoutIva,
+      discount: productToAdd.value.descuento * productToAdd.value.cantidad,
     };
 
-    productToAdd.subtotal = productToAdd.price * productToAdd.quantity;
-
-    if (isPDiscountPercentage.value) {
-      productToAdd.discount =
-        productToAdd.quantity *
-        Math.round((productToAdd.price * ingreso.value.discountProduct) / 100);
-    } else {
-      productToAdd.discount = Math.round(
-        ingreso.value.discountProduct * productToAdd.quantity
-      );
-    }
-
-    productToAdd.total = productToAdd.subtotal - productToAdd.discount;
-
-    ingreso.value.products.push(productToAdd);
+    productAdd.impuestos = calcImpuestosProduct(
+      productAdd.subtotal,
+      productAdd.discount,
+      productAdd.iva
+    );
+    productAdd.total =
+      productAdd.subtotal - productAdd.discount + productAdd.impuestos;
+    ingreso.value.products.push(productAdd);
 
     resetProduct();
   };
@@ -128,9 +170,12 @@ const useOrdenesDeCompra = () => {
     isEdit.value = true;
     const productTable = ingreso.value.products.find((p) => p.id === id);
     product.value = products.value.find((p) => p.id === id);
-    ingreso.value.quantityProduct = productTable.quantity;
-    ingreso.value.discountProduct =
+    product.value.costWithoutIva = productTable.price;
+    productToAdd.value.cantidad = productTable.quantity;
+    productToAdd.value.descuentoValue =
       productTable.discount / productTable.quantity;
+    productToAdd.value.iva = productTable.iva;
+    calcDiscountProduct();
   };
 
   const updateProduct = () => {
@@ -138,27 +183,26 @@ const useOrdenesDeCompra = () => {
       (p) => p.id === product.value.id
     );
 
-    const productToAdd = {
+    const productToUpdate = {
       id: product.value.id,
       name: product.value.name,
-      price: Math.ceil(product.value.costPrice),
-      quantity: ingreso.value.quantityProduct,
+      price: product.value.costWithoutIva,
+      quantity: productToAdd.value.cantidad,
+      iva: product.value.ivaType,
+      subtotal: productToAdd.value.cantidad * product.value.costWithoutIva,
+      discount: productToAdd.value.descuento * productToAdd.value.cantidad,
     };
 
-    productToAdd.subtotal = productToAdd.price * productToAdd.quantity;
-
-    if (isPDiscountPercentage.value) {
-      productToAdd.discount =
-        productToAdd.quantity *
-        Math.round((productToAdd.price * ingreso.value.discountProduct) / 100);
-    } else {
-      productToAdd.discount = Math.round(
-        ingreso.value.discountProduct * productToAdd.quantity
-      );
-    }
-
-    productToAdd.total = productToAdd.subtotal - productToAdd.discount;
-    ingreso.value.products[idx] = productToAdd;
+    productToUpdate.impuestos = calcImpuestosProduct(
+      productToUpdate.subtotal,
+      productToUpdate.discount,
+      productToUpdate.iva
+    );
+    productToUpdate.total =
+      productToUpdate.subtotal -
+      productToUpdate.discount +
+      productToUpdate.impuestos;
+    ingreso.value.products[idx] = productToUpdate;
 
     resetProduct();
     isEdit.value = false;
@@ -184,36 +228,24 @@ const useOrdenesDeCompra = () => {
     resetFormulario();
   };
 
-  const resetFormulario = () => {
-    ingreso.value = {
-      proveedor: "",
-      products: [],
-      date: "",
-      quantityProduct: 1,
-      discountProduct: 0,
-      discount: 0,
-    };
-    product.value = null;
-  };
-
   return {
     ingreso,
+    isEdit,
+    isPDiscountPercentage,
+    ordenDeCompra,
     ordenesDeCompra,
     product,
-    isPDiscountPercentage,
+    productToAdd,
     v$,
-    ordenDeCompra: computed(() => store.getters["ordenesDeCompra/getOrdenDeCompra"]),
-    editProduct,
-    updateProduct,
-    deleteProduct,
-    resetFormulario,
     addProduct,
-    isEdit,
-    loadOrdenesDeCompra,
-    togglePDiscountType: () =>
-      (isPDiscountPercentage.value = !isPDiscountPercentage.value),
     createIngreso,
+    deleteProduct,
+    editProduct,
     loadOrdenDeCompra,
+    loadOrdenesDeCompra,
+    resetFormulario,
+    togglePDiscountType,
+    updateProduct,
   };
 };
 

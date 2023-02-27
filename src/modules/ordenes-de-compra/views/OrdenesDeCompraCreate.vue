@@ -8,13 +8,13 @@
       <div class="grid gap-6 mb-6 md:grid-cols-3">
         <div>
           <label
-            for="client"
+            for="provedor"
             class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
             >Proveedor</label
           >
           <div class="flex">
             <v-select
-              id="client"
+              id="provedor"
               v-model="ingreso.proveedor"
               class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 style-chooser"
               :options="proveedores"
@@ -63,13 +63,33 @@
           >
           <v-select
             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 style-chooser"
-            :options="products"
+            :options="
+              products.map((product) => ({
+                ...product,
+                label: `${product.code} - ${product.name} - ${product.category.name} - $.${product.costWithoutIva}`,
+              }))
+            "
             label="label"
             v-model="product"
           ></v-select>
         </div>
       </div>
-      <div class="grid gap-6 mb-6 md:grid-cols-5">
+      <div class="grid gap-6 mb-6 md:grid-cols-3" v-if="product">
+        <div>
+          <label
+            for="quantity"
+            class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+            >Precio</label
+          >
+          <input
+            type="number"
+            id="quantity"
+            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            placeholder="0"
+            required
+            v-model="product.costWithoutIva"
+          />
+        </div>
         <div>
           <label
             for="quantity"
@@ -82,7 +102,7 @@
             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             placeholder="0"
             required
-            v-model="ingreso.quantityProduct"
+            v-model="productToAdd.cantidad"
           />
         </div>
         <div>
@@ -103,26 +123,9 @@
               type="number"
               placeholder="0"
               required
-              v-model="ingreso.discountProduct"
+              v-model="productToAdd.descuentoValue"
             />
           </div>
-        </div>
-        <div>
-          <label
-            for="iva"
-            class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-            >Tipo de IVA</label
-          >
-          <select
-            id="iva"
-            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-          >
-            <option value="">Seleccionar IVA</option>
-            <option value="IVA 0">IVA 0%</option>
-            <option value="IVA 10.5">IVA 10.5%</option>
-            <option value="IVA 21">IVA 21%</option>
-            <option value="IVA 27.5">IVA 27.5%</option>
-          </select>
         </div>
         <div>
           <label
@@ -136,15 +139,32 @@
             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             placeholder="0"
             required
-            v-model="ingreso.subtotalProduct"
+            v-model="productToAdd.subtotal"
           />
+        </div>
+        <div>
+          <label
+            for="iva"
+            class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+            >Tipo de IVA</label
+          >
+          <select
+            id="iva"
+            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            v-model="product.ivaType"
+          >
+            <option value="IVA 0">IVA 0%</option>
+            <option value="IVA 10.5">IVA 10.5%</option>
+            <option value="IVA 21">IVA 21%</option>
+            <option value="IVA 27.5">IVA 27.5%</option>
+          </select>
         </div>
         <div class="flex items-end justify-center">
           <button
             v-if="isEdit"
             class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
             type="button"
-            :disabled="!ingreso.quantityProduct && !ingreso.discountProduct"
+            :disabled="!productToAdd.cantidad && !productToAdd.descuentoValue"
             @click="updateProduct"
           >
             Actualizar
@@ -153,7 +173,7 @@
             v-else
             class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
             type="button"
-            :disabled="!ingreso.quantityProduct && !ingreso.discountProduct"
+            :disabled="!productToAdd.cantidad && !productToAdd.descuentoValue"
             @click="addProduct"
           >
             Agregar
@@ -171,8 +191,9 @@
         />
         <hr class="my-3" />
       </template>
+      <hr />
       <!-- Totales finales de la factura -->
-      <div class="grid gap-6 mb-6 md:grid-cols-3">
+      <div class="grid gap-6 mt-3 mb-6 md:grid-cols-3">
         <div>
           <Input
             label="Subtotal"
@@ -193,7 +214,11 @@
       </div>
       <div class="py-2">
         <Button text="Guardar" @click="createIngreso" />
-        <Button className="danger" text="Cancelar" to="ordenes-de-compra-list" />
+        <Button
+          className="danger"
+          text="Cancelar"
+          to="ordenes-de-compra-list"
+        />
       </div>
     </CardBody>
   </Card>
@@ -235,6 +260,7 @@ export default {
       isEdit,
       updateProduct,
       createIngreso,
+      productToAdd,
     } = useOrdenesDeCompra();
 
     getProducts();
@@ -253,6 +279,7 @@ export default {
       updateProduct,
       isEdit,
       createIngreso,
+      productToAdd,
     };
   },
 };

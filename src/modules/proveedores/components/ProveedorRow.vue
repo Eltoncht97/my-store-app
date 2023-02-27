@@ -14,7 +14,7 @@
       'text-red-400 dark:text-red-500': proveedor.account.saldo < 0,
     }"
   >
-  ${{ (proveedor.saldo > 0) ? proveedor.saldo : proveedor.saldo  * -1}}
+  ${{ (proveedor.account.saldo > 0) ? proveedor.account.saldo : proveedor.account.saldo  * -1}}
   </td>
   <td class="flex justify-center items-center py-4 px-6 space-x-3">
     <router-link

@@ -1,5 +1,5 @@
 <template>
-  <div v-if="movimientos.length > 0" >
+  <div v-if="movimientos.length > 0">
     <Table class="h-80">
       <TableHead>
         <th scope="col" class="py-3 px-6">Fecha</th>
@@ -42,7 +42,7 @@
         TOTAL:
       </p>
       <p class="py-4 px-6 font-medium text-right">
-        ${{ totalMovimientos }}
+        ${{ path.includes('informe') ? totalMovimientosInforme : totalMovimientos }}
       </p>
     </div>
   </div>
@@ -55,6 +55,7 @@ import TableHead from "../../../components/TableHead.vue";
 import TableBody from "../../../components/TableBody.vue";
 import TableRow from "../../../components/TableRow.vue";
 import useCajas from "../composables/useCajas";
+import { useRoute } from "vue-router";
 export default {
   components: {
     Table,
@@ -68,10 +69,9 @@ export default {
     },
   },
   setup() {
-    const { caja, totalMovimientos } = useCajas();
-    return { caja, totalMovimientos };
+    const route = useRoute()
+    const { caja, totalMovimientos, totalMovimientosInforme } = useCajas();
+    return { caja, totalMovimientos, totalMovimientosInforme, path: route.path };
   },
 };
 </script>
-
-<style></style>

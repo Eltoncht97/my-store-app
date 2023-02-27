@@ -10,6 +10,7 @@
           <th scope="col" class="py-3 px-6">Costo u.</th>
           <th scope="col" class="py-3 px-6">Subtotal</th>
           <th scope="col" class="py-3 px-6">Descuento</th>
+          <th scope="col" class="py-3 px-6">Impuestos</th>
           <th scope="col" class="py-3 px-6">Total</th>
           <th scope="col" class="py-3 px-6 text-center" v-if="!hiddenOptions">
             Opciones
@@ -30,6 +31,7 @@
           </td>
           <td class="py-4 px-6">${{ product.subtotal }}</td>
           <td class="py-4 px-6">${{ product.discount }}</td>
+          <td class="py-4 px-6">${{ product.impuestos }}</td>
           <td class="py-4 px-6">${{ product.total }}</td>
           <td class="py-4 px-6 text-right" v-if="!hiddenOptions">
             <button
@@ -37,14 +39,14 @@
               @click="$emit('on:edit', product.id)"
               class="font-medium text-blue-600 dark:text-blue-500 hover:underline mr-2"
             >
-              Edit
+              <EditIcon />
             </button>
             <button
               v-if="!isEdit"
               @click="$emit('on:delete', product.id)"
               class="font-medium text-red-600 dark:text-red-500 hover:underline"
             >
-              Delete
+              <DeleteIcon />
             </button>
           </td>
         </TableRow>
@@ -54,9 +56,11 @@
 </template>
 
 <script>
+import DeleteIcon from "@/components/icons/DeleteIcon.vue";
+import EditIcon from "@/components/icons/EditIcon.vue";
 import TableBody from "@/components/TableBody.vue";
 import TableRow from "@/components/TableRow.vue";
-import useVentas from '@/modules/ventas/composables/useVentas';
+import useVentas from "@/modules/ventas/composables/useVentas";
 
 export default {
   props: {
@@ -75,6 +79,6 @@ export default {
       isEdit,
     };
   },
-  components: { TableBody, TableRow },
+  components: { TableBody, TableRow, EditIcon, DeleteIcon },
 };
 </script>

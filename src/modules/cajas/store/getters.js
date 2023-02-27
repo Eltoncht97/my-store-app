@@ -18,3 +18,9 @@ export const getTotalMovimientos = (state) => {
     .map((m) => m.monto)
     .reduce((prev, curr) => prev + curr, 0);
 };
+
+export const getTotalMovimientosInforme = (state) => {
+  return state.informeCaja.movimientos[0]
+    .map((m) => m.monto)
+    .reduce((prev, curr) => prev + curr, 0);
+};
