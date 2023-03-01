@@ -275,7 +275,7 @@
         class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
         >Metodo de Pago</label
       >
-      <div :class="`grid gap-6 mb-6 md:grid-cols-${paymentMethods.length}`">
+      <div :class="`grid gap-6 mb-6 grid-cols-5`">
         <div
           class="flex items-center pl-4 rounded border border-gray-200 dark:border-gray-700"
           v-for="paymentMethod in paymentMethods"

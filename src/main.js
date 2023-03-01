@@ -2,6 +2,7 @@ import { createApp } from "vue";
 import App from "./App.vue";
 import router from "./router";
 import store from "./store";
+import VueSidebarMenu from 'vue-sidebar-menu'
 import "./assets/tailwind.css";
 import "flowbite";
 import vSelect from "vue-select";
@@ -10,7 +11,6 @@ import moment from "moment";
 // uso font awesome?
 import "./utils/icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
-import VueSidebarMenu from 'vue-sidebar-menu'
 import 'vue-sidebar-menu/dist/vue-sidebar-menu.css'
 
 const app = createApp(App)

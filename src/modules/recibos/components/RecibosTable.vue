@@ -1,6 +1,7 @@
 <template>
   <Table>
     <TableHead>
+      <th scope="col" class="py-3 px-6">Voucher</th>
       <th scope="col" class="py-3 px-6">Fecha</th>
       <th scope="col" class="py-3 px-6">Cliente</th>
       <th scope="col" class="py-3 px-6">Metodo de Pago</th>
