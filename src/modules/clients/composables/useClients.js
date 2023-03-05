@@ -19,14 +19,15 @@ const useClients = () => {
 
   const v$ = useVuelidate(rules, client);
 
-  const loadClients = async () => {
+  const loadClients = async ({ isFilter = false, limited = true } = {}) => {
     store.commit("ui/setLoading", true);
-    store.commit("ui/updateOffset");
+    store.commit("ui/updateOffset", { isFilter });
 
     const { ok, message, totalItems } = await store.dispatch(
-      "clients/loadClients",
+      "clients/getClients",
       {
-        limit: pagination.value.limit,
+        filterTxt: pagination.value.filterTxt,
+        limit: limited ? pagination.value.limit : "",
         offset: pagination.value.offset,
       }
     );
@@ -34,16 +35,6 @@ const useClients = () => {
     if (!ok) return errorAlert({ text: message });
 
     store.commit("ui/updateTotalItems", totalItems);
-    store.commit("ui/setLoading", false);
-  };
-
-  const filterClients = async (filterTxt) => {
-    store.commit("ui/setLoading", true);
-    await store.dispatch("clients/loadClients", {
-      filterTxt,
-      filterSaldo: filterSaldo.value,
-      limit: pagination.value.limit,
-    });
     store.commit("ui/setLoading", false);
   };
 
@@ -68,7 +59,7 @@ const useClients = () => {
     store.commit("ui/setLoadingButton", false);
     if (!ok) return errorAlert({ text: message });
 
-    successAlert({ text: "Cliente creado exitosamente!" });
+    successAlert({ text: message });
     loadClients();
 
     if (!redirect) {
@@ -124,7 +115,6 @@ const useClients = () => {
 
     createClient,
     deleteClient,
-    filterClients,
     loadClient,
     loadClients,
     resetClient: () => store.commit("clients/resetClient"),

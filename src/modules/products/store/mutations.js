@@ -1,59 +1,36 @@
-import { getIVAValue } from "@/utils/getIvaValue"
-import { computed } from "vue"
+import { getIVAValue } from "@/utils/getIvaValue";
+import { computed } from "vue";
 
 // export const myAction = ( state, payload ) => {}
 export const setProducts = (state, products) => {
-  state.products = products
-  state.productsFiltered = products
-}
-
-export const filterProducts = (state, filterTxt) => {
-  state.productsFiltered = state.products.filter(product => product.code == filterTxt || product.name.toLowerCase().includes(filterTxt) || product.category.toLowerCase().includes(filterTxt))
-}
+  state.products = products;
+};
 
 export const setProduct = (state, product) => {
   state.product = {
     ...product,
     category: product.category.id,
     iva: computed(() => {
-      return (
-        (product.costWithoutIva * getIVAValue(product.ivaType)) /
-        100
-      );
+      return (product.costWithoutIva * getIVAValue(product.ivaType)) / 100;
     }),
     costPrice: computed(
-      () =>
-        product.costWithoutIva -
-        product.discount +
-        product.iva
+      () => product.costWithoutIva - product.discount + product.iva
     ),
-    price: computed(
-      () => product.costPrice + product.utilities
-    )
-  }
-}
-
-export const addProduct = (state, product) => {
-  state.products.push(product)
-  state.productsFiltered.push(product)
-}
-
-export const removeProduct = (state, id) => {
-  state.products = state.products.filter(product => product.id !== id)
-  state.productsFiltered = state.products
-}
+    price: computed(() => product.costPrice + product.utilities),
+  };
+};
 
 export const resetProduct = (state) => {
   state.product = {
-    name: '',
-    categoryId: '',
-    code: '',
+    name: "",
+    category: "",
+    code: "",
     stock: 0,
     stockMin: 0,
     costWithoutIva: 0,
     discountPercentage: 0,
     discount: 0,
-    ivaType: '',
+    ivaType: "",
     iva: computed(() => {
       return (
         (state.product.costWithoutIva * getIVAValue(state.product.ivaType)) /
@@ -68,20 +45,12 @@ export const resetProduct = (state) => {
     ),
     utilitiesPercentage: 0,
     utilities: 0,
-    price: computed(() => state.product.costPrice + state.product.utilities)
-  }
-}
+    price: computed(() => state.product.costPrice + state.product.utilities),
+  };
+};
 
 export const resetModule = (state) => {
-  state.products = []
-  state.productsFiltered = []
-  state.product = null
-}
-
-export const setCountProducts = (state, payload) => {
-  state.pagination.count = payload
-}
-
-export const updateOffset = (state, page) => {
-  state.pagination.offset = (page - 1) * 10
-}
+  state.products = [];
+  state.productsFiltered = [];
+  state.product = null;
+};

@@ -25,7 +25,7 @@ const useUI = () => {
     ),
     pagination: computed(() => store.getters["ui/getPagination"]),
     toggleModal: (type) => store.commit("ui/toggleModal", { type }),
-    resetPagination: () => store.commit("ui/resetPagination")
+    resetPagination: () => store.commit("ui/resetPagination"),
   };
 };
 

@@ -1,7 +1,7 @@
 // export const myAction = async ({ commit }) => {}
 import pukisApi from "@/api/pukisApi";
 
-export const loadClients = async ({ commit }, params) => {
+export const getClients = async ({ commit }, params) => {
   const { filterTxt = "", filterSaldo, limit = 10, offset = 0 } = params;
   try {
     const response = await pukisApi.get(

@@ -5,7 +5,7 @@
       <LinkButton :to="{ name: 'category-create' }" text="Nueva Categoría" />
     </CardHeader>
     <CardBody>
-      <SearchInput @on:filter="filterCategories" />
+      <SearchInput @on:filter="loadCategories" v-model="pagination.filterTxt" />
       <Loading v-if="isLoading" />
       <CategoriesTable v-else />
       <div
@@ -53,7 +53,7 @@ export default {
     TitleText,
   },
   setup() {
-    const { loadCategories, filterCategories, resetCategory } = useCategories();
+    const { loadCategories, resetCategory } = useCategories();
     const { pagination, isLoading, resetPagination } = useUI();
 
     loadCategories();
@@ -66,7 +66,6 @@ export default {
     return {
       pagination,
       isLoading,
-      filterCategories,
       loadCategories,
     };
   },

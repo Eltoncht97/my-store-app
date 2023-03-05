@@ -38,14 +38,13 @@ export default {
   },
   setup() {
     const { isLoadingButton } = useUI();
-    const { client, createClient, resetClient, v$ } = useClients();
+    const { client, createClient, resetClient } = useClients();
 
     resetClient();
 
     return {
       client,
       isLoadingButton,
-      v$,
       createClient,
     };
   },

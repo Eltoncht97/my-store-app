@@ -11,16 +11,7 @@
   <td class="py-4 px-6">${{ product.costPrice }}</td>
   <td class="py-4 px-6">${{ product.utilities }}</td>
   <td class="py-4 px-6">${{ product.price }}</td>
-  <td
-    class="py-4 px-6"
-    :class="{
-      'text-green-400 dark:text-green-500': product.active,
-      'text-red-400 dark:text-red-500': !product.active,
-    }"
-  >
-    {{ product.active ? "Activo" : "Inactivo" }}
-  </td>
-  <td class="flex items-center py-4 px-4 space-x-3">
+  <td class="flex justify-center items-center py-4 px-4 space-x-3">
     <router-link
       :to="{ name: 'product-edit', params: { id: product.id } }"
       class="text-blue-600 dark:text-blue-500 hover:underline"

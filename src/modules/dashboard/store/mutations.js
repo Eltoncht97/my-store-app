@@ -30,9 +30,14 @@ export function toggleModal(state, { type }) {
   }
 }
 
-export function updateOffset(state) {
-  state.pagination.offset =
-    (state.pagination.currentPage - 1) * state.pagination.limit;
+export function updateOffset(state, { isFilter = false } = {}) {
+  state.pagination.offset = !isFilter
+    ? (state.pagination.currentPage - 1) * state.pagination.limit
+    : 0;
+
+  if (isFilter) {
+    state.pagination.currentPage = 1;
+  }
 }
 
 export function updateTotalItems(state, totalItems) {
@@ -42,10 +47,11 @@ export function updateTotalItems(state, totalItems) {
 
 export function resetPagination(state) {
   state.pagination = {
-    limit: 5,
+    limit: "5",
     currentPage: 1,
     offset: 0,
     totalItems: 0,
     totalPages: 1,
+    filterTxt: "",
   };
 }

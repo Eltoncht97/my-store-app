@@ -15,12 +15,15 @@ export function getIsLoadingButton(state) {
 export function getShowNewClientModal(state) {
   return state.showNewClientModal;
 }
+
 export function getShowNewProveedorModal(state) {
   return state.showNewProveedorModal;
 }
+
 export function getShowNewReciboModal(state) {
   return state.showNewReciboModal;
 }
+
 export function getShowNewProductModal(state) {
   return state.showNewProductModal;
 }

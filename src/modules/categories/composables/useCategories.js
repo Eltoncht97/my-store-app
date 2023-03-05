@@ -18,14 +18,15 @@ const useCategories = () => {
 
   const v$ = useVuelidate(rules, category);
 
-  const loadCategories = async () => {
+  const loadCategories = async ({ isFilter = false, limited = true } = {}) => {
     store.commit("ui/setLoading", true);
-    store.commit("ui/updateOffset");
+    store.commit("ui/updateOffset", { isFilter });
 
     const { ok, message, totalItems } = await store.dispatch(
       "categories/getCategories",
       {
-        limit: pagination.value.limit,
+        filterTxt: pagination.value.filterTxt,
+        limit: limited ? pagination.value.limit : "",
         offset: pagination.value.offset,
       }
     );
@@ -33,15 +34,6 @@ const useCategories = () => {
     if (!ok) return errorAlert({ text: message });
 
     store.commit("ui/updateTotalItems", totalItems);
-    store.commit("ui/setLoading", false);
-  };
-
-  const filterCategories = async (filterTxt) => {
-    store.commit("ui/setLoading", true);
-    await store.dispatch("categories/getCategories", {
-      filterTxt,
-      limit: pagination.value.limit,
-    });
     store.commit("ui/setLoading", false);
   };
 
@@ -123,7 +115,6 @@ const useCategories = () => {
 
     createCategory,
     deleteCategory,
-    filterCategories,
     loadCategories,
     loadCategory,
     resetCategory: () => store.commit("categories/resetCategory"),

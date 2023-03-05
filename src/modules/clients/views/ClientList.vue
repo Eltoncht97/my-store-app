@@ -5,7 +5,7 @@
       <LinkButton :to="{ name: 'client-create' }" text="Nuevo Cliente" />
     </CardHeader>
     <CardBody>
-      <SearchInput @on:filter="filterClients" />
+      <SearchInput @on:filter="loadClients" v-model="pagination.filterTxt" />
       <Loading v-if="isLoading" />
       <ClientsTable v-else />
       <div
@@ -53,7 +53,7 @@ export default {
     Title,
   },
   setup() {
-    const { loadClients, filterClients, resetClient } = useClients();
+    const { loadClients, resetClient } = useClients();
     const { pagination, isLoading, resetPagination } = useUI();
 
     loadClients();
@@ -66,7 +66,6 @@ export default {
     return {
       isLoading,
       pagination,
-      filterClients,
       loadClients,
     };
   },
