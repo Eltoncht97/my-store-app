@@ -22,7 +22,7 @@
       <div class="py-2">
         <Button
           text="Guardar"
-          @click="createCategory(category)"
+          @click="createCategory()"
           :loading="isLoading"
         />
         <Button

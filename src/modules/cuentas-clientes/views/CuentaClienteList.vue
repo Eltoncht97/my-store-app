@@ -50,8 +50,8 @@ import CardBody from "@/components/CardBody.vue";
 import useClients from "@/modules/clients/composables/useClients";
 import TitleText from "@/components/TitleText.vue";
 import SearchInput from "@/components/SearchInput.vue";
-import Pagination from "@/modules/clients/components/ClientListPagination.vue";
 import CuentasTable from "../components/CuentasTable.vue";
+import Pagination from "@/components/Pagination.vue";
 
 export default {
   components: {
@@ -67,7 +67,6 @@ export default {
     const {
       loadClients,
       filterClients,
-      pageCount,
       filterSaldo,
       totalClients,
       pagination,
@@ -77,7 +76,6 @@ export default {
 
     return {
       filterClients,
-      pageCount,
       filterSaldo,
       totalClients,
       pagination,

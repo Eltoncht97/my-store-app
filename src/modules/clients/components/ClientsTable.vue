@@ -1,22 +1,18 @@
 <template>
-  <template v-if="clients.length == 0">
-    <div>No hay clientes clientes cargados</div>
-  </template>
-  <template v-else>
-    <Table>
-      <TableHead>
-        <th scope="col" class="py-3 px-6">Nombre</th>
-        <th scope="col" class="py-3 px-6">Telefono</th>
-        <th scope="col" class="py-3 px-6">Direccion</th>
-        <th scope="col" class="py-3 px-6 text-center">Opciones</th>
-      </TableHead>
-      <TableBody>
-        <TableRow v-for="client in clients" :key="client.id">
-          <ClientRow :client="client" />
-        </TableRow>
-      </TableBody>
-    </Table>
-  </template>
+  <div v-if="clients.length == 0">No hay clientes clientes cargados</div>
+  <Table v-else>
+    <TableHead>
+      <th scope="col" class="py-3 px-6">Nombre</th>
+      <th scope="col" class="py-3 px-6">Telefono</th>
+      <th scope="col" class="py-3 px-6">Direccion</th>
+      <th scope="col" class="py-3 px-6 text-center">Opciones</th>
+    </TableHead>
+    <TableBody>
+      <TableRow v-for="client in clients" :key="client.id">
+        <ClientRow :client="client" />
+      </TableRow>
+    </TableBody>
+  </Table>
 </template>
 
 <script>

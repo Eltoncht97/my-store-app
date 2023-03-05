@@ -8,6 +8,10 @@ export function getIsLoading(state) {
   return state.isLoading;
 }
 
+export function getIsLoadingButton(state) {
+  return state.isLoadingButton;
+}
+
 export function getShowNewClientModal(state) {
   return state.showNewClientModal;
 }
@@ -19,4 +23,8 @@ export function getShowNewReciboModal(state) {
 }
 export function getShowNewProductModal(state) {
   return state.showNewProductModal;
+}
+
+export function getPagination(state) {
+  return state.pagination;
 }

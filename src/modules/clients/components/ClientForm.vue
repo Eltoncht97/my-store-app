@@ -1,7 +1,7 @@
 <template>
-  <div class="grid gap-6 mb-6 md:grid-cols-1">
+  <div :class="`grid gap-6 mb-6 md:grid-cols-${cols}`">
     <div>
-      <Input label="Nombre" v-model="client.name" placeholder="Nombre..." />
+      <Input label="Nombre" v-model="client.name" />
       <p
         class="mt-2 text-sm text-red-600 dark:text-red-500"
         v-if="v$.name.$error"
@@ -10,11 +10,7 @@
       </p>
     </div>
     <div>
-      <Input
-        label="Apellido"
-        v-model="client.lastname"
-        placeholder="Apellido..."
-      />
+      <Input label="Apellido" v-model="client.lastname" />
       <p
         class="mt-2 text-sm text-red-600 dark:text-red-500"
         v-if="v$.lastname.$error"
@@ -23,11 +19,7 @@
       </p>
     </div>
     <div>
-      <Input
-        label="Telefono"
-        v-model="client.phone"
-        placeholder="Telefono..."
-      />
+      <Input label="Telefono" v-model="client.phone" />
       <p
         class="mt-2 text-sm text-red-600 dark:text-red-500"
         v-if="v$.phone.$error"
@@ -36,11 +28,7 @@
       </p>
     </div>
     <div>
-      <Input
-        label="Direccion"
-        v-model="client.address"
-        placeholder="Direccion..."
-      />
+      <Input label="Direccion" v-model="client.address" />
       <p
         class="mt-2 text-sm text-red-600 dark:text-red-500"
         v-if="v$.address.$error"
@@ -59,10 +47,14 @@ export default {
   components: {
     Input,
   },
+  props: {
+    cols: {
+      type: String,
+      default: "1",
+    },
+  },
   setup() {
-    const { client, resetClient, v$ } = useClients();
-
-    resetClient();
+    const { client, v$ } = useClients();
 
     return {
       client,

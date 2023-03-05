@@ -1,79 +1,71 @@
 <template>
   <Card>
     <CardHeader>
-      <TitleText text="Clientes" />
-      <router-link
-        :to="{ name: 'client-create' }"
-        class="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
-      >
-        Nuevo Cliente
-      </router-link>
+      <Title text="Clientes" />
+      <LinkButton :to="{ name: 'client-create' }" text="Nuevo Cliente" />
     </CardHeader>
     <CardBody>
+      <SearchInput @on:filter="filterClients" />
       <Loading v-if="isLoading" />
-      <template v-else>
-        <SearchInput @on:filter="filterClients" />
-        <ClientsTable />
-      </template>
-      <div class="flex align-center" :class="`${totalClients > pagination.limit ? 'justify-between' : 'justify-end'}`">
-        <Pagination v-if="totalClients > pagination.limit" />
-        <select
-          class="mr-2 mt-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-          v-model="pagination.limit"
-          @change="loadClients"
-        >
-          <option :value="5">5</option>
-          <option :value="10">10</option>
-          <option :value="15">15</option>
-          <option :value="20">20</option>
-        </select>
+      <ClientsTable v-else />
+      <div
+        v-if="!isLoading"
+        :class="`flex align-center ${
+          pagination.totalPages > 1 ? 'justify-between' : 'justify-end'
+        }`"
+      >
+        <Pagination
+          v-if="pagination.totalPages > 1"
+          @on:updatePage="loadClients"
+        />
+        <ItemsPerPage v-model="pagination.limit" @on:select="loadClients" />
       </div>
     </CardBody>
   </Card>
 </template>
 
 <script>
+import { onUnmounted } from "vue";
 import Card from "@/components/Card.vue";
 import CardHeader from "@/components/CardHeader.vue";
 import CardBody from "@/components/CardBody.vue";
-import TitleText from "@/components/TitleText.vue";
-import SearchInput from "@/components/SearchInput.vue";
+import Title from "@/components/TitleText.vue";
+import LinkButton from "@/components/LinkButton.vue";
 import Loading from "@/components/Loading.vue";
+import SearchInput from "@/components/SearchInput.vue";
+import Pagination from "@/components/Pagination.vue";
+import ItemsPerPage from "@/components/ItemsPerPage.vue";
 import ClientsTable from "../components/ClientsTable.vue";
-import Pagination from "../components/ClientListPagination.vue";
 import useUI from "@/modules/dashboard/composables/useUI";
 import useClients from "../composables/useClients";
 
 export default {
   components: {
     Card,
-    CardHeader,
     CardBody,
+    CardHeader,
     ClientsTable,
-    TitleText,
-    SearchInput,
-    Pagination,
+    ItemsPerPage,
+    LinkButton,
     Loading,
+    Pagination,
+    SearchInput,
+    Title,
   },
   setup() {
-    const {
-      loadClients,
-      filterClients,
-      resetClient,
-      totalClients,
-      pagination,
-    } = useClients();
-
-    const { isLoading } = useUI();
+    const { loadClients, filterClients, resetClient } = useClients();
+    const { pagination, isLoading, resetPagination } = useUI();
 
     loadClients();
     resetClient();
 
+    onUnmounted(() => {
+      resetPagination();
+    });
+
     return {
       isLoading,
-      totalClients,
       pagination,
-
       filterClients,
       loadClients,
     };

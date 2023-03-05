@@ -1,27 +1,23 @@
 // export const myAction = async ({ commit }) => {}
 import pukisApi from "@/api/pukisApi";
 
-export const loadClients = async (
-  { commit, state },
-  { page = 1, filterTxt = "", filterSaldo, limit=10 }
-) => {
+export const loadClients = async ({ commit }, params) => {
+  const { filterTxt = "", filterSaldo, limit = 10, offset = 0 } = params;
   try {
-    commit("updateOffset", page);
     const response = await pukisApi.get(
-      `/clients?limit=${limit}&offset=${state.pagination.offset}&keyword=${filterTxt}&${
+      `/clients?limit=${limit}&offset=${offset}&keyword=${filterTxt}&${
         filterSaldo === "saldo" && "saldo=true"
       }`
     );
 
     if (!response.data) {
       commit("setClients", []);
-      return;
+      return { ok: false, message: "Hubo un error al cargar los clientes" };
     }
 
     commit("setClients", response.data.clients);
-    commit("setCountClients", response.data.count);
 
-    return { ok: true };
+    return { ok: true, totalItems: response.data.count };
   } catch (error) {
     console.log(error);
     return { ok: false, message: "Hubo un error al cargar los clientes" };
@@ -31,11 +27,10 @@ export const loadClients = async (
 export const getClient = async ({ commit }, id) => {
   try {
     const response = await pukisApi.get(`/clients/${id}`);
-    console.log(response);
 
     if (!response.data) {
       commit("setClient", null);
-      return;
+      return { ok: false, message: "Hubo un error al cargar el cliente" };
     }
 
     commit("setClient", response.data);
@@ -47,39 +42,34 @@ export const getClient = async ({ commit }, id) => {
   }
 };
 
-export const createClient = async ({ commit }, data) => {
+export const createClient = async (_, data) => {
   try {
     const response = await pukisApi.post(`/clients`, data);
 
     if (!response.data) {
-      return;
+      return { ok: false, message: "Hubo un error al crear el cliente" };
     }
 
-    commit("addClient", response.data);
-
-    return { ok: true };
+    return { ok: true, message: "El cliente a sido creado." };
   } catch (error) {
     console.log(error);
     return { ok: false, message: "Hubo un error al crear el cliente" };
   }
 };
 
-export const updateClient = async ({ commit }, client) => {
+export const updateClient = async (_, client) => {
   const { id, ...dataToUpdate } = client;
-  console.log(dataToUpdate);
+
   try {
     const response = await pukisApi.patch(`/clients/${id}`, {
       ...dataToUpdate,
     });
 
     if (!response.data) {
-      commit("setClient", null);
-      return;
+      return { ok: false, message: "Hubo un error al actualizar el cliente" };
     }
 
-    commit("setClient", response.data);
-
-    return { ok: true };
+    return { ok: true, message: "El cliente a sido actualizado." };
   } catch (error) {
     console.log(error);
     return { ok: false, message: "Hubo un error al actualizar el cliente" };
@@ -90,8 +80,7 @@ export const deleteClient = async (_, id) => {
   try {
     await pukisApi.delete(`/clients/${id}`);
 
-    // commit("removeClient", id);
-    return { ok: true };
+    return { ok: true, message: "El cliente a sido eliminado." };
   } catch (error) {
     console.log(error);
     return { ok: false, message: "Hubo un error al eliminar el cliente" };

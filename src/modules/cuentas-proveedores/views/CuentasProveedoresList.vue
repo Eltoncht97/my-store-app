@@ -36,11 +36,11 @@ import CardHeader from "@/components/CardHeader.vue";
 import CardBody from "@/components/CardBody.vue";
 import TitleText from "@/components/TitleText.vue";
 import SearchInput from "@/components/SearchInput.vue";
-import Pagination from "@/modules/clients/components/ClientListPagination.vue";
 import CuentasProveedoresTable from "../components/CuentasProveedoresTable.vue";
 import useProveedores from "@/modules/proveedores/composables/useProveedores";
 import Loading from "@/components/Loading.vue";
 import useAuth from "@/modules/auth/composables/useAuth";
+import Pagination from "@/components/Pagination.vue";
 
 export default {
   components: {

@@ -37,10 +37,10 @@ import TitleText from "@/components/TitleText.vue";
 import CardBody from "@/components/CardBody.vue";
 import Loading from "@/components/Loading.vue";
 import SearchInput from "@/components/SearchInput.vue";
-import Pagination from "@/modules/clients/components/ClientListPagination.vue";
 import useUI from "@/modules/dashboard/composables/useUI";
 import useProveedores from "@/modules/proveedores/composables/useProveedores";
 import ProveedoresTable from "../components/ProveedoresTable.vue";
+import Pagination from "@/components/Pagination.vue";
 
 export default {
   components: {
@@ -52,7 +52,7 @@ export default {
     SearchInput,
     Pagination,
     ProveedoresTable,
-  },
+},
   setup() {
     const { isLoading } = useUI();
     const { totalProveedores, loadProveedores, filterSaldo, filterProveedores } = useProveedores();

@@ -5,6 +5,9 @@ import useVuelidate from "@vuelidate/core";
 import { required } from "@vuelidate/validators";
 import Swal from "sweetalert2";
 
+import { isValidForm } from "@/utils/isValidForm";
+import { customAlert } from "@/utils/customSweetAlerts";
+
 const useCategories = () => {
   const store = useStore();
   const router = useRouter();
@@ -17,35 +20,47 @@ const useCategories = () => {
   const rules = computed(() => {
     return {
       name: { required },
-      lastname: { required },
-      phone: { required },
-      address: { required },
     };
   });
 
   const v$ = useVuelidate(rules, category);
 
   const loadCategories = async () => {
-    await store.dispatch("categories/loadCategories");
+    store.commit("ui/setLoading", true);
+    const { ok, message } = await store.dispatch("categories/loadCategories");
+    store.commit("ui/setLoading", false);
+    if (!ok) {
+      customAlert("Error", message, "warning");
+    }
   };
 
-  const getCategory = async (id) => {
-    await store.dispatch("categories/getCategory", id);
+  const loadCategory = async (id) => {
+    store.commit("ui/setLoading", true);
+    const { ok, message } = await store.dispatch("categories/getCategory", id);
+    store.commit("ui/setLoading", false);
+    if (!ok) {
+      customAlert("Error", message, "warning");
+    }
   };
 
-  const createCategory = async (data) => {
-    if (!isValidForm()) return;
+  const createCategory = async (redirect = true) => {
+    if (!isValidForm(rules.value, v$.value)) return;
 
-    const resp = await store.dispatch("categories/createCategory", data);
+    const resp = await store.dispatch(
+      "categories/createCategory",
+      category.value
+    );
+
     if (resp.ok) {
       Swal.fire("Completado!", "Categoria creada exitosamente!", "success");
-      router.push({ name: "categories-list" });
+
+      if (redirect) router.push({ name: "categories-list" });
     }
   };
 
   const updateCategory = async (category) => {
-    if (!isValidForm()) return;
-    
+    if (!isValidForm(rules.value, v$.value)) return;
+
     const confirmUpdate = await Swal.fire({
       title: "Esta seguro de actualizar la categoria?",
       text: "No se podra revertir esto!",
@@ -90,21 +105,9 @@ const useCategories = () => {
     }
   };
 
-  // onUnmounted(() => {
-  //   store.commit('products/resetModule')
-  // })
-
   onMounted(() => {
     store.commit("categories/resetCategory");
   });
-
-  const isValidForm = () => {
-    if (!v$.value.name.$invalid) {
-      return true;
-    }
-    v$.value.$touch();
-    return false;
-  };
 
   return {
     filter,
@@ -115,7 +118,7 @@ const useCategories = () => {
 
     createCategory,
     deleteCategory,
-    getCategory,
+    loadCategory,
     loadCategories,
     updateCategory,
     filterCategories: (filterTxt) =>

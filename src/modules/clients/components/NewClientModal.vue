@@ -4,7 +4,7 @@
       <div class="flex items-center text-lg">Agregar Cliente</div>
     </template>
     <template #body>
-      <NewClientForm />
+      <ClientForm />
     </template>
     <template #footer>
       <div class="flex justify-between">
@@ -16,7 +16,10 @@
           Cancelar
         </button>
         <button
-          @click="createClientVenta(client); $emit('on:close', 'newClient');"
+          @click="
+            createClientVenta(client);
+            $emit('on:close', 'newClient');
+          "
           type="button"
           class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
         >
@@ -29,12 +32,12 @@
 
 <script>
 import { Modal } from "flowbite-vue";
-import NewClientForm from "./NewClientForm.vue";
+import ClientForm from "./ClientForm.vue";
 import useClients from "../composables/useClients";
 import useVentas from "@/modules/ventas/composables/useVentas";
 
 export default {
-  components: { NewClientForm, Modal },
+  components: { ClientForm, Modal },
   props: {
     showModal: {
       type: Boolean,
@@ -44,14 +47,13 @@ export default {
   emits: ["on:close"],
   setup() {
     const { client, resetClient } = useClients();
-
     const { createClientVenta } = useVentas();
 
     resetClient();
 
     return {
-      createClientVenta,
       client,
+      createClientVenta,
     };
   },
 };

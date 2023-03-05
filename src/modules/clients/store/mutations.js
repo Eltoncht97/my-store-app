@@ -10,14 +10,6 @@ export const setClient = (state, client) => {
   state.client = client;
 };
 
-export const addClient = (state, client) => {
-  state.clients.push({ ...client, label: `${client.lastname} ${client.name}` });
-};
-
-export const removeClient = (state, id) => {
-  state.clients = state.clients.filter((client) => client.id !== id);
-};
-
 export const resetClient = (state) => {
   state.client = {
     name: "",
@@ -30,12 +22,4 @@ export const resetClient = (state) => {
 export const resetModule = (state) => {
   state.clients = [];
   state.client = null;
-};
-
-export const setCountClients = (state, payload) => {
-  state.pagination.totalClients = payload;
-};
-
-export const updateOffset = (state, page) => {
-  state.pagination.offset = (page - 1) * state.pagination.limit;
 };

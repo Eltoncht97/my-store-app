@@ -1,128 +1,137 @@
-import { ref, computed, onMounted } from "vue";
+import { ref, computed } from "vue";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 import useVuelidate from "@vuelidate/core";
-import { required } from "@vuelidate/validators";
-import Swal from "sweetalert2";
+
 import { isValidForm } from "@/utils/isValidForm";
+import { confirmAlert, errorAlert, successAlert } from "@/utils/customAlerts";
+import { clientRules } from "../utils/clientRules";
 
 const useClients = () => {
   const store = useStore();
   const router = useRouter();
 
   const filterSaldo = ref("todos");
-  const currentPage = ref(1);
-  // const limit = ref(5);
+  const pagination = computed(() => store.getters["ui/getPagination"]);
 
   const client = computed(() => store.getters["clients/getClient"]);
-  const pagination = computed(() => store.getters["clients/getPagination"]);
-
-  const rules = computed(() => {
-    return {
-      name: { required },
-      lastname: { required },
-      phone: { required },
-      address: { required },
-    };
-  });
+  const rules = computed(() => clientRules);
 
   const v$ = useVuelidate(rules, client);
 
   const loadClients = async () => {
     store.commit("ui/setLoading", true);
-    console.log(pagination.value);
-    await store.dispatch("clients/loadClients", { page: currentPage.value, limit: pagination.value.limit });
+    store.commit("ui/updateOffset");
+
+    const { ok, message, totalItems } = await store.dispatch(
+      "clients/loadClients",
+      {
+        limit: pagination.value.limit,
+        offset: pagination.value.offset,
+      }
+    );
+
+    if (!ok) return errorAlert({ text: message });
+
+    store.commit("ui/updateTotalItems", totalItems);
     store.commit("ui/setLoading", false);
   };
 
   const filterClients = async (filterTxt) => {
+    store.commit("ui/setLoading", true);
     await store.dispatch("clients/loadClients", {
       filterTxt,
       filterSaldo: filterSaldo.value,
+      limit: pagination.value.limit,
     });
-  };
-
-  const getClient = async (id) => {
-    store.commit("ui/setLoading", true);
-    await store.dispatch("clients/getClient", id);
     store.commit("ui/setLoading", false);
   };
 
-  const createClient = async (data, redirect = true) => {
-    if (!isValidForm(rules.value, v$.value)) return;
+  const loadClient = async (id) => {
+    store.commit("ui/setLoading", true);
 
-    const resp = await store.dispatch("clients/createClient", data);
-    if (resp.ok) {
-      Swal.fire("Completado!", "Cliente creado exitosamente!", "success");
-      loadClients();
-      if (redirect) {
-        router.push({ name: "clients-list" });
-      }
-    }
+    const { ok, message } = await store.dispatch("clients/getClient", id);
+
+    if (!ok) return errorAlert({ text: message });
+
+    store.commit("ui/setLoading", false);
   };
 
-  const updateClient = async (client) => {
+  const createClient = async (redirect = true) => {
     if (!isValidForm(rules.value, v$.value)) return;
+    store.commit("ui/setLoadingButton", true);
 
-    const confirmUpdate = await Swal.fire({
+    const { ok, message } = await store.dispatch(
+      "clients/createClient",
+      client.value
+    );
+
+    store.commit("ui/setLoadingButton", false);
+    if (!ok) return errorAlert({ text: message });
+
+    successAlert({ text: "Cliente creado exitosamente!" });
+    loadClients();
+
+    if (!redirect) {
+      return;
+    }
+    router.push({ name: "clients-list" });
+  };
+
+  const updateClient = async () => {
+    if (!isValidForm(rules.value, v$.value)) return;
+    store.commit("ui/setLoadingButton", true);
+
+    const isConfirmed = await confirmAlert({
       title: "Esta seguro de actualizar el cliente?",
-      text: "No se podra revertir esto!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Actualizar!",
-      cancelButtonText: "Cancelar",
     });
 
-    if (confirmUpdate.isConfirmed) {
-      const resp = await store.dispatch("clients/updateClient", client);
-      if (resp.ok) {
-        Swal.fire("Actualizado!", "El cliente a sido actualizado.", "success");
-        router.push({ name: "clients-list" });
-      }
-    }
+    if (!isConfirmed) return;
+
+    const { ok, message } = await store.dispatch(
+      "clients/updateClient",
+      client.value
+    );
+
+    store.commit("ui/setLoadingButton", false);
+    if (!ok) return errorAlert({ text: message });
+
+    successAlert({ text: message });
+    router.push({ name: "clients-list" });
   };
 
   const deleteClient = async (id) => {
-    const confirmDelete = await Swal.fire({
+    const isConfirmed = await confirmAlert({
       title: "Esta seguro de eliminar el cliente?",
-      text: "No se podra revertir esto!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Eliminar!",
-      cancelButtonText: "Cancelar",
     });
 
-    if (confirmDelete.isConfirmed) {
-      const resp = await store.dispatch("clients/deleteClient", id);
-      if (resp.ok) {
-        Swal.fire("Eliminado!", "El cliente a sido eliminado.", "success");
-        loadClients();
-      }
-    }
+    if (!isConfirmed) return;
+
+    const { ok, message } = await store.dispatch("clients/deleteClient", id);
+
+    if (!ok) return errorAlert({ text: message });
+
+    successAlert({ text: message });
+    loadClients();
   };
 
-  onMounted(() => {
-    store.commit("clients/resetClient");
-  });
+  // onMounted(() => {
+  //   store.commit("clients/resetClient");
+  // });
 
   return {
     client,
     clients: computed(() => store.getters["clients/getClients"]),
-    currentPage,
     filterSaldo,
+    pagination,
     totalClients: computed(() => store.getters["clients/getTotalClients"]),
     totalPages: computed(() => store.getters["clients/getClientsPages"]),
-    pagination,
     v$,
 
     createClient,
     deleteClient,
     filterClients,
-    getClient,
+    loadClient,
     loadClients,
     resetClient: () => store.commit("clients/resetClient"),
     updateClient,

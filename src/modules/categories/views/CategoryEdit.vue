@@ -95,10 +95,10 @@ export default {
   setup() {
     const route = useRoute();
     const { id } = route.params;
-    const { getCategory, category, updateCategory, isLoading, v$ } =
+    const { loadCategory, category, updateCategory, isLoading, v$ } =
       useCategories();
 
-    getCategory(id);
+      loadCategory(id);
 
     return {
       category,
