@@ -5,7 +5,7 @@
         class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400"
       >
         <tr>
-          <th scope="col" class="py-3 px-6">Cantidad</th>
+          <th scope="col" class="py-3 px-6 text-center">Cantidad</th>
           <th scope="col" class="py-3 px-6">Producto</th>
           <th scope="col" class="py-3 px-6">Costo u.</th>
           <th scope="col" class="py-3 px-6">Subtotal</th>
@@ -33,7 +33,7 @@
           <td class="py-4 px-6">${{ product.discount }}</td>
           <td class="py-4 px-6">${{ product.impuestos }}</td>
           <td class="py-4 px-6">${{ product.total }}</td>
-          <td class="py-4 px-6 text-right" v-if="!hiddenOptions">
+          <td class="py-4 px-6 text-center" v-if="!hiddenOptions">
             <button
               v-if="!isEdit"
               @click="$emit('on:edit', product.id)"

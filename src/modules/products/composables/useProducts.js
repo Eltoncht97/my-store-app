@@ -5,6 +5,7 @@ import useVuelidate from "@vuelidate/core";
 import { minValue, required } from "@vuelidate/validators";
 import Swal from "sweetalert2";
 import { isValidForm } from "@/utils/isValidForm";
+import { customAlert } from "@/utils/customSweetAlerts";
 
 const useProducts = () => {
   const store = useStore();
@@ -31,32 +32,7 @@ const useProducts = () => {
     }
   };
 
-  const product = ref({
-    name: "",
-    categoryId: "",
-    code: "",
-    stock: 0,
-    stockMin: 0,
-    costWithoutIva: 0,
-    discountPercentage: 0,
-    discount: 0,
-    ivaType: "",
-    iva: computed(() => {
-      return (
-        (product.value.costWithoutIva * getIVAValue(product.value.ivaType)) /
-        100
-      );
-    }),
-    costPrice: computed(
-      () =>
-        product.value.costWithoutIva -
-        product.value.discount +
-        product.value.iva
-    ),
-    utilitiesPercentage: 0,
-    utilities: 0,
-    price: computed(() => product.value.costPrice + product.value.utilities),
-  });
+  const product = computed(() => store.getters["products/getProduct"])
 
   const rules = computed(() => {
     return {
@@ -79,35 +55,36 @@ const useProducts = () => {
 
   const v$ = useVuelidate(rules, product);
 
-  const loadProducts = async (page=1) => {
-    await store.dispatch("products/loadProducts", {page});
+  const loadProducts = async (page = 1) => {
+    await store.dispatch("products/loadProducts", { page });
   };
 
   const getProduct = async (id) => {
-    const res = await store.dispatch("products/getProduct", id);
-    product.value = res.product;
-    product.value.category = res.product.category.id;
-    product.value.costPrice = computed(
-      () =>
-        product.value.costWithoutIva -
-        product.value.discount +
-        product.value.iva
-    );
-    product.value.price = computed(
-      () => product.value.costPrice + product.value.utilities
-    );
+    store.commit("ui/setLoading", true);
+    const { ok, message } = await store.dispatch("products/getProduct", id);
+    store.commit("ui/setLoading", false);
+    if (!ok) {
+      customAlert("Error", message, "warning");
+    }
   };
 
-  const createProduct = async (data) => {
+  const createProduct = async (params) => {
+    const { redirect = true } = params;
+
     if (!isValidForm(rules.value, v$.value)) return;
 
-    const resp = await store.dispatch("products/createProduct", data);
-    if (resp.ok) {
-      Swal.fire("Completado!", "Producto creado exitosamente!", "success");
-      router.push({ name: "products-list" });
-    } else {
+    const resp = await store.dispatch("products/createProduct", product.value);
+
+    if (!resp.ok) {
       Swal.fire("Error!", "Hubo un problema al crear el producto!", "warning");
     }
+
+    Swal.fire("Completado!", "Producto creado exitosamente!", "success");
+
+    if (redirect) {
+      router.push({ name: "products-list" });
+    }
+    return { ok: true }
   };
 
   const updateProduct = async (product) => {
