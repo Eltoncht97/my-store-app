@@ -50,7 +50,7 @@ export const createClient = async (_, data) => {
       return { ok: false, message: "Hubo un error al crear el cliente" };
     }
 
-    return { ok: true, message: "El cliente a sido creado." };
+    return { ok: true, message: "Cliente creado exitosamente." };
   } catch (error) {
     console.log(error);
     return { ok: false, message: "Hubo un error al crear el cliente" };

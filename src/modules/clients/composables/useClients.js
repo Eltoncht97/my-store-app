@@ -52,9 +52,8 @@ const useClients = () => {
 
     const { ok, message } = await store.dispatch("clients/getClient", id);
 
-    if (!ok) return errorAlert({ text: message });
-
     store.commit("ui/setLoading", false);
+    if (!ok) return errorAlert({ text: message });
   };
 
   const createClient = async (redirect = true) => {
@@ -115,15 +114,10 @@ const useClients = () => {
     loadClients();
   };
 
-  // onMounted(() => {
-  //   store.commit("clients/resetClient");
-  // });
-
   return {
     client,
     clients: computed(() => store.getters["clients/getClients"]),
     filterSaldo,
-    pagination,
     totalClients: computed(() => store.getters["clients/getTotalClients"]),
     totalPages: computed(() => store.getters["clients/getClientsPages"]),
     v$,

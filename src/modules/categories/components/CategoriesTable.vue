@@ -2,7 +2,6 @@
   <Table>
     <TableHead>
       <th scope="col" class="py-3 px-6">Nombre</th>
-      <th scope="col" class="py-3 px-6">Status</th>
       <th scope="col" class="py-3 px-6 text-center">Opciones</th>
     </TableHead>
     <TableBody>

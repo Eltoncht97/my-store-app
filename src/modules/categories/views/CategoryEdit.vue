@@ -1,75 +1,31 @@
 <template>
-  <Card v-if="category">
+  <Card>
     <CardHeader>
       <TitleText text="Editar Categoria" />
     </CardHeader>
     <CardBody>
-      <div class="grid gap-6 mb-6 md:grid-cols-2">
-        <div>
-          <Input
-            label="Nombre"
-            v-model="category.name"
-            placeholder="Category..."
-          />
-          <p
-            class="mt-2 text-sm text-red-600 dark:text-red-500"
-            v-if="v$.name.$error"
-          >
-            <span class="font-medium">El nombre es requerido</span>
-          </p>
-        </div>
-        <div>
-          <label
-            class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-            >Estado</label
-          >
-          <div class="flex">
-            <div class="flex items-center mr-4">
-              <input
-                id="inline-radio"
-                v-model="category.active"
-                type="radio"
-                :value="true"
-                name="inline-radio-group"
-                class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-              />
-              <label
-                for="inline-radio"
-                class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-                >Activo</label
-              >
-            </div>
-            <div class="flex items-center mr-4">
-              <input
-                id="inline-2-radio"
-                v-model="category.active"
-                type="radio"
-                :value="false"
-                name="inline-radio-group"
-                class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-              />
-              <label
-                for="inline-2-radio"
-                class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-                >Inactivo</label
-              >
-            </div>
+      <Loading v-if="isLoading" />
+      <template v-else>
+        <div class="grid gap-6 mb-6 md:grid-cols-2">
+          <div>
+            <Input label="Nombre" v-model="category.name" />
+            <p
+              class="mt-2 text-sm text-red-600 dark:text-red-500"
+              v-if="v$.name.$error"
+            >
+              <span class="font-medium">El nombre es requerido</span>
+            </p>
           </div>
         </div>
-      </div>
-      <div class="py-2">
-        <Button
-          text="Guardar"
-          @click="updateCategory(category)"
-          :loading="isLoading"
-        />
-        <Button
-          className="danger"
-          text="Cancelar"
-          to="categories-list"
-          :loading="isLoading"
-        />
-      </div>
+        <div class="py-2">
+          <Button
+            text="Guardar"
+            @click="updateCategory()"
+            :loading="isLoadingButton"
+          />
+          <Button className="danger" text="Cancelar" to="categories-list" />
+        </div>
+      </template>
     </CardBody>
   </Card>
 </template>
@@ -80,9 +36,11 @@ import Card from "@/components/Card.vue";
 import CardHeader from "@/components/CardHeader.vue";
 import CardBody from "@/components/CardBody.vue";
 import TitleText from "@/components/TitleText.vue";
+import Loading from "@/components/Loading.vue";
 import Input from "@/components/Input.vue";
 import Button from "@/components/Button.vue";
 import useCategories from "../composables/useCategories";
+import useUI from "@/modules/dashboard/composables/useUI";
 
 export default {
   params: {
@@ -91,20 +49,21 @@ export default {
       required: true,
     },
   },
-  components: { Card, CardHeader, CardBody, TitleText, Input, Button },
+  components: { Card, CardHeader, CardBody, TitleText, Input, Button, Loading },
   setup() {
     const route = useRoute();
     const { id } = route.params;
-    const { loadCategory, category, updateCategory, isLoading, v$ } =
-      useCategories();
+    const { loadCategory, category, updateCategory, v$ } = useCategories();
 
-      loadCategory(id);
+    const { isLoading, isLoadingButton } = useUI();
+
+    loadCategory(id);
 
     return {
       category,
       isLoading,
+      isLoadingButton,
       v$,
-
       updateCategory,
     };
   },

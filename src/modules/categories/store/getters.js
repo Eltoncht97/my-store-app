@@ -3,8 +3,9 @@
 // }
 
 export const getCategories = ( state ) => {
-    return state.categoriesFiltered
+    return state.categories
 }
+
 export const getCategory = ( state ) => {
     return state.category
 }

@@ -1,40 +1,74 @@
 <template>
   <Card>
     <CardHeader>
-      <TitleText text="Categorias" />
-      <router-link
-        :to="{ name: 'category-create' }"
-        class="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
-      >
-        Nueva Categoria
-      </router-link>
+      <TitleText text="Categorías" />
+      <LinkButton :to="{ name: 'category-create' }" text="Nueva Categoría" />
     </CardHeader>
     <CardBody>
       <SearchInput @on:filter="filterCategories" />
-      <CategoriesTable />
+      <Loading v-if="isLoading" />
+      <CategoriesTable v-else />
+      <div
+        v-if="!isLoading"
+        :class="`flex align-center ${
+          pagination.totalPages > 1 ? 'justify-between' : 'justify-end'
+        }`"
+      >
+        <Pagination
+          v-if="pagination.totalPages > 1"
+          @on:updatePage="loadCategories"
+        />
+        <ItemsPerPage v-model="pagination.limit" @on:select="loadCategories" />
+      </div>
     </CardBody>
   </Card>
 </template>
 
 <script>
-import Card from '@/components/Card.vue'
-import CardHeader from '@/components/CardHeader.vue'
-import CardBody from '@/components/CardBody.vue'
-import TitleText from '@/components/TitleText.vue'
-import SearchInput from '@/components/SearchInput.vue'
-import CategoriesTable from '../components/CategoriesTable.vue'
-import useCategories from '../composables/useCategories'
+import { onUnmounted } from "vue";
+import Card from "@/components/Card.vue";
+import CardHeader from "@/components/CardHeader.vue";
+import CardBody from "@/components/CardBody.vue";
+import TitleText from "@/components/TitleText.vue";
+import Loading from "@/components/Loading.vue";
+import LinkButton from "@/components/LinkButton.vue";
+import SearchInput from "@/components/SearchInput.vue";
+import ItemsPerPage from "@/components/ItemsPerPage.vue";
+import Pagination from "@/components/Pagination.vue";
+import CategoriesTable from "../components/CategoriesTable.vue";
+import useUI from "@/modules/dashboard/composables/useUI";
+import useCategories from "../composables/useCategories";
 
 export default {
-  components: { Card, CardHeader, CardBody, CategoriesTable, TitleText, SearchInput },
+  components: {
+    Card,
+    CardBody,
+    CardHeader,
+    CategoriesTable,
+    ItemsPerPage,
+    LinkButton,
+    Loading,
+    Pagination,
+    SearchInput,
+    TitleText,
+  },
   setup() {
-    const { loadCategories, filterCategories } = useCategories()
-    
-    loadCategories()
+    const { loadCategories, filterCategories, resetCategory } = useCategories();
+    const { pagination, isLoading, resetPagination } = useUI();
+
+    loadCategories();
+    resetCategory();
+
+    onUnmounted(() => {
+      resetPagination();
+    });
 
     return {
-      filterCategories
-    }
+      pagination,
+      isLoading,
+      filterCategories,
+      loadCategories,
+    };
   },
-}
+};
 </script>

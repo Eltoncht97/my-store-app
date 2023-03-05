@@ -5,15 +5,6 @@
   >
     {{ category.name }}
   </th>
-  <td
-    class="py-4 px-6"
-    :class="{
-      'text-green-400 dark:text-green-500': category.active,
-      'text-red-400 dark:text-red-500': !category.active,
-    }"
-  >
-    {{ category.active ? "Activo" : "Inactivo" }}
-  </td>
   <td class="flex justify-center items-center py-4 px-6 space-x-3">
     <router-link
       :to="{ name: 'category-edit', params: { id: category.id } }"
@@ -30,9 +21,9 @@
 </template>
 
 <script>
-import useCategories from "../composables/useCategories";
 import EditIcon from "@/components/icons/EditIcon.vue";
 import DeleteIcon from "@/components/icons/DeleteIcon.vue";
+import useCategories from "../composables/useCategories";
 
 export default {
   components: { EditIcon, DeleteIcon },

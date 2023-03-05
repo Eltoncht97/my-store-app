@@ -1,18 +1,21 @@
 // export const myAction = async ({ commit }) => {}
 import pukisApi from "@/api/pukisApi";
 
-export const loadCategories = async ({ commit }) => {
+export const getCategories = async ({ commit }, params) => {
+  const { filterTxt = "", limit = 10, offset = 0 } = params;
   try {
-    const { data } = await pukisApi.get("/categories");
+    const response = await pukisApi.get(
+      `/categories?limit=${limit}&offset=${offset}&keyword=${filterTxt}`
+    );
 
-    if (!data) {
+    if (!response.data) {
       commit("setCategories", []);
-      return;
+      return { ok: false, message: "Hubo un error al cargar las categorias" };
     }
 
-    commit("setCategories", data);
+    commit("setCategories", response.data.categories);
 
-    return { ok: true };
+    return { ok: true, totalItems: response.data.count };
   } catch (error) {
     console.log(error);
     return { ok: false, message: "Hubo un error al cargar las categorias" };
@@ -21,13 +24,11 @@ export const loadCategories = async ({ commit }) => {
 
 export const getCategory = async ({ commit }, id) => {
   try {
-    const response = await pukisApi.get(
-      `/categories/${id}`
-    );
+    const response = await pukisApi.get(`/categories/${id}`);
 
     if (!response.data) {
       commit("setCategory", null);
-      return;
+      return { ok: false, message: "Hubo un error al cargar la categoria" };
     }
 
     commit("setCategory", response.data);
@@ -39,55 +40,45 @@ export const getCategory = async ({ commit }, id) => {
   }
 };
 
-export const createCategory = async ({ commit }, data) => {
+export const createCategory = async (_, data) => {
   try {
-    const response = await pukisApi.post(
-      `/categories`,
-      data
-    );
+    const response = await pukisApi.post(`/categories`, data);
 
     if (!response.data) {
-      return;
+      return { ok: false, message: "Hubo un error al crear la categoria" };
     }
 
-    commit("addCategory", response.data);
-
-    return { ok: true };
+    return { ok: true, message: "Categoría creada exitosamente." };
   } catch (error) {
     console.log(error);
     return { ok: false, message: "Hubo un error al crear la categoria" };
   }
 };
 
-export const updateCategory = async ({ commit }, category) => {
-  const {id, name, active} = category
-  console.log(category)
+export const updateCategory = async (_, category) => {
+  const { id, name } = category;
+  console.log(category);
   try {
-    const response = await pukisApi.patch(
-      `/categories/${id}`,
-      {name, active}
-    );
+    const response = await pukisApi.patch(`/categories/${id}`, {
+      name,
+    });
 
     if (!response.data) {
-      commit("setCategory", null);
-      return;
+      return { ok: false, message: "Hubo un error al actualizar la categoria" };
     }
 
-    commit("setCategory", response.data);
-
-    return { ok: true };
+    return { ok: true, message: "La categoría a sido actualizada" };
   } catch (error) {
     console.log(error);
     return { ok: false, message: "Hubo un error al actualizar la categoria" };
   }
 };
 
-export const deleteCategory = async ({ commit }, id) => {
+export const deleteCategory = async (_, id) => {
   try {
     await pukisApi.delete(`/categories/${id}`);
 
-    commit("removeCategory", id);
-    return { ok: true };
+    return { ok: true, message: "El cliente a sido eliminado." };
   } catch (error) {
     console.log(error);
     return { ok: false, message: "Hubo un error al eliminar la categoria" };

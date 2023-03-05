@@ -17,11 +17,5 @@ export default {
       name: 'category-edit',
       component: () => import(/* webpackChunkName: "CategoryEdit view" */ '@/modules/categories/views/CategoryEdit.vue'),
     },
-    // {
-    //   url para pagina que muestre todos los productos de una categoria 
-    //   path: '/catergorias/:id/productos',
-    //   name: 'category-products',
-    //   component: 
-    // },
   ]
 }
