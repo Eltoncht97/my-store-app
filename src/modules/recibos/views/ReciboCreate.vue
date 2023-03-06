@@ -106,15 +106,8 @@
         </div>
       </div>
       <div class="py-2">
-        <Button
-          text="Guardar"
-          @click="createRecibo(recibo)"
-        />
-        <Button
-          className="danger"
-          text="Cancelar"
-          to="recibos-list"
-        />
+        <Button text="Guardar" @click="createRecibo(recibo)" />
+        <Button className="danger" text="Cancelar" to="recibos-list" />
       </div>
     </CardBody>
   </Card>
@@ -138,11 +131,13 @@ export default {
     const { loadClients, clients } = useClients();
 
     resetRecibo();
-    loadClients();
+    loadClients({ limited: false });
 
     return {
       clients,
-      paymentMethods: paymentMethods.filter(p => p.value !== 'Cuenta Corriente'),
+      paymentMethods: paymentMethods.filter(
+        (p) => p.value !== "Cuenta Corriente"
+      ),
       recibo,
       v$,
 

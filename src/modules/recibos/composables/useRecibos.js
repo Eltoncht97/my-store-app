@@ -1,66 +1,102 @@
 import { computed } from "vue";
+import { useRouter } from "vue-router";
 import { useStore } from "vuex";
 import useVuelidate from "@vuelidate/core";
-import { required, minValue } from "@vuelidate/validators";
+
+import { errorAlert, successAlert } from "@/utils/customAlerts";
 import { isValidForm } from "@/utils/isValidForm";
-import Swal from "sweetalert2";
-import { useRouter } from "vue-router";
+import { reciboRules } from "../utils/reciboRules";
 
 const useRecibos = () => {
   const store = useStore();
   const router = useRouter();
 
-  const recibo = computed(() => store.getters["recibos/getRecibo"])
+  const pagination = computed(() => store.getters["ui/getPagination"]);
 
-  const rules = computed(() => {
-    return {
-      client: { required },
-      paymentMethod: { required },
-      total: { required, minValue: minValue(1) },
-    };
-  });
+  const recibo = computed(() => store.getters["recibos/getRecibo"]);
+  const rules = computed(() => reciboRules);
 
   const v$ = useVuelidate(rules, recibo);
-
-  const recibos = computed(() => store.getters["recibos/getRecibos"]);
 
   const filterRecibos = (filterTxt) =>
     store.commit("recibos/filterRecibos", filterTxt);
 
-  const loadRecibos = async () => {
+  const loadRecibos = async ({ isFilter = false, limited = true } = {}) => {
     store.commit("ui/setLoading", true);
-    await store.dispatch("recibos/loadRecibos");
+    store.commit("ui/updateOffset", { isFilter });
+
+    const { ok, message, totalItems } = await store.dispatch(
+      "recibos/loadRecibos",
+      {
+        filterTxt: pagination.value.filterTxt,
+        limit: limited ? pagination.value.limit : "",
+        offset: pagination.value.offset,
+      }
+    );
+
+    if (!ok) return errorAlert({ text: message });
+
+    store.commit("ui/updateTotalItems", totalItems);
     store.commit("ui/setLoading", false);
   };
-  
+
   const loadRecibo = async (id) => {
     store.commit("ui/setLoading", true);
-    await store.dispatch("recibos/getRecibo", id);
+
+    const { ok, message } = await store.dispatch("recibos/getRecibo", id);
+
     store.commit("ui/setLoading", false);
-  }
-
-  const createRecibo = async (redirect=true) => {
-    if (!isValidForm(rules.value, v$.value)) return;
-
-    const resp = await store.dispatch("recibos/createRecibo", recibo.value);
-    if (resp.ok) {
-      Swal.fire("Completado!", "Recibo creado exitosamente!", "success");
-      if(redirect) router.push({ name: "recibos-list" });
-    }
+    if (!ok) return errorAlert({ text: message });
   };
 
-  const resetRecibo = () => store.commit("recibos/resetRecibo")
+  const createRecibo = async (redirect = true) => {
+    if (!isValidForm(rules.value, v$.value)) return;
+    store.commit("ui/setLoadingButton", true);
+
+    const { ok, message } = await store.dispatch(
+      "recibos/createRecibo",
+      recibo.value
+    );
+
+    store.commit("ui/setLoadingButton", false);
+    if (!ok) return errorAlert({ text: message });
+
+    successAlert({ text: message });
+    loadRecibos();
+
+    if (!redirect) {
+      return;
+    }
+
+    router.push({ name: "recibos-list" });
+  };
+
+  //TODO
+  // const deleteRecibo = async (id) => {
+  //   const isConfirmed = await confirmAlert({
+  //     title: "Esta seguro de eliminar el recibo?",
+  //   });
+
+  //   if (!isConfirmed) return;
+
+  //   const { ok, message } = await store.dispatch("recibos/deleteRecibo", id);
+
+  //   if (!ok) return errorAlert({ text: message });
+
+  //   successAlert({ text: message });
+  //   loadRecibos();
+  // };
 
   return {
     recibo,
-    recibos,
+    recibos: computed(() => store.getters["recibos/getRecibos"]),
     v$,
 
     createRecibo,
     loadRecibos,
     loadRecibo,
     filterRecibos,
-    resetRecibo,
+    resetRecibo: () => store.commit("recibos/resetRecibo"),
   };
 };
 

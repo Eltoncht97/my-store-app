@@ -3,7 +3,7 @@
 // }
 
 export const getRecibos = (state) => {
-  return state.recibosFiltered;
+  return state.recibos;
 };
 
 export const getRecibo = (state) => {

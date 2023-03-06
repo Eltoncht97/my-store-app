@@ -1,18 +1,21 @@
 // export const myAction = async ({ commit }) => {}
 import pukisApi from "@/api/pukisApi";
 
-export const loadRecibos = async ({ commit }) => {
+export const loadRecibos = async ({ commit }, params) => {
+  const { filterTxt = "", limit = 10, offset = 0 } = params;
   try {
-    const { data } = await pukisApi.get("/recibos");
+    const response = await pukisApi.get(
+      `/recibos?limit=${limit}&offset=${offset}&keyword=${filterTxt}`
+    );
 
-    if (!data) {
+    if (!response.data) {
       commit("setRecibos", []);
-      return;
+      return { ok: false, message: "Hubo un error al cargar los recibos" };
     }
 
-    commit("setRecibos", data);
+    commit("setRecibos", response.data.recibos);
 
-    return { ok: true };
+    return { ok: true, totalItems: response.data.count };
   } catch (error) {
     console.log(error);
     return { ok: false, message: "Hubo un error al cargar los recibos" };
@@ -25,7 +28,7 @@ export const getRecibo = async ({ commit }, id) => {
 
     if (!response.data) {
       commit("setRecibo", null);
-      return;
+      return { ok: false, message: "Hubo un error al cargar el recibo" };
     }
 
     commit("setRecibo", response.data);
@@ -37,38 +40,46 @@ export const getRecibo = async ({ commit }, id) => {
   }
 };
 
-export const createRecibo = async ({ commit }, reciboData) => {
+export const createRecibo = async (_, reciboData) => {
   const { client, ...restData } = reciboData;
 
   try {
-    const response = await pukisApi.post("/recibos", {
+    const reciboResponse = await pukisApi.post("/recibos", {
       clientId: client.id,
       ...restData,
     });
 
-    if (!response.data) {
-      commit("setRecibo", null);
-      return;
+    if (!reciboResponse.data) {
+      return { ok: false, message: "Hubo un error al crear el recibo" };
     }
 
-    commit("setRecibo", response.data);
-
-    const response2 = await pukisApi.post("cajas/movimiento", {
+    const movimientoResponse = await pukisApi.post("cajas/movimiento", {
       tipo: reciboData.paymentMethod,
       description: `Cobro ${reciboData.paymentMethod} ${client.lastname} ${client.name}`,
       monto: reciboData.total,
     });
 
-    if (!response2.data) {
+    if (!movimientoResponse.data) {
       return {
         ok: false,
         message: "Hubo un problema al crear el movimiento en caja",
       };
     }
 
-    return { ok: true };
+    return { ok: true, message: "Recibo creado exitosamente" };
   } catch (error) {
     console.log(error);
     return { ok: false, message: "Hubo un error al crear el recibo" };
   }
 };
+
+// export const deleteRecibo = async (_, id) => {
+//   try {
+//     await pukisApi.delete(`/recibos/${id}`);
+
+//     return { ok: true, message: "El recibo a sido eliminado." };
+//   } catch (error) {
+//     console.log(error);
+//     return { ok: false, message: "Hubo un error al eliminar el recibo" };
+//   }
+// };

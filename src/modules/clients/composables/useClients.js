@@ -109,8 +109,6 @@ const useClients = () => {
     client,
     clients: computed(() => store.getters["clients/getClients"]),
     filterSaldo,
-    totalClients: computed(() => store.getters["clients/getTotalClients"]),
-    totalPages: computed(() => store.getters["clients/getClientsPages"]),
     v$,
 
     createClient,
