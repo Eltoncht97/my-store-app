@@ -11,10 +11,13 @@
   <!-- Movimientos de la caja -->
   <Card class="mt-5">
     <CardHeader>
-      <TitleText text="Movimientos"/>
+      <TitleText text="Movimientos" />
     </CardHeader>
     <CardBody>
-      <MovimientosTable v-if="caja && caja.movimientos" :movimientos="caja.movimientos"/>
+      <MovimientosTable
+        v-if="caja && caja.movimientos"
+        :movimientos="caja.movimientos"
+      />
     </CardBody>
   </Card>
 </template>
@@ -39,16 +42,16 @@ export default {
     SaldosCaja,
   },
   setup() {
-    const { loadCaja, caja } = useCajas();
-
     const route = useRoute();
+
     const { id } = route.params;
+    const { loadCaja, caja } = useCajas();
 
     loadCaja(id);
 
     return {
-      caja
-    }
+      caja,
+    };
   },
 };
 </script>

@@ -67,13 +67,11 @@
 </template>
 
 <script>
-// import { useRoute } from "vue-router";
 import Card from "@/components/Card.vue";
 import CardHeader from "@/components/CardHeader.vue";
 import CardBody from "@/components/CardBody.vue";
 import TitleText from "@/components/TitleText.vue";
 import MovimientosTable from "../components/MovimientosTable.vue";
-// import SaldosCaja from "../components/SaldosCaja.vue";
 import useCajas from "../composables/useCajas";
 import { ref } from "vue";
 import moment from "moment";
