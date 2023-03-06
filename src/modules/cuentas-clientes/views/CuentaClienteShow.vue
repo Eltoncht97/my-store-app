@@ -1,13 +1,16 @@
 <template>
   <!-- Saldos de la cuenta  -->
-  <Card v-if="cuenta">
+  <Card>
     <CardHeader>
+      <Loading v-if="isLoading" />
       <TitleText
         :text="`Detalle de cuenta corriente ${cuenta.client.lastname} ${cuenta.client.name}`"
+        v-else
       />
     </CardHeader>
     <CardBody>
-      <CuentaInfo />
+      <Loading v-if="isLoading" />
+      <CuentaInfo v-else />
     </CardBody>
   </Card>
   <!-- Movimientos de la cuenta -->
@@ -16,7 +19,10 @@
       <TitleText text="Movimientos" />
     </CardHeader>
     <CardBody>
-      <MovimientosCuentaTable v-if="cuenta && cuenta.movimientos" />
+      <Loading v-if="isLoading" />
+      <MovimientosCuentaTable
+        v-if="cuenta && cuenta.movimientos && !isLoading"
+      />
     </CardBody>
   </Card>
 </template>
@@ -27,9 +33,11 @@ import Card from "@/components/Card.vue";
 import CardHeader from "@/components/CardHeader.vue";
 import CardBody from "@/components/CardBody.vue";
 import TitleText from "@/components/TitleText.vue";
+import Loading from "@/components/Loading.vue";
+import MovimientosCuentaTable from "../components/MovimientosCuentaTable.vue";
 import CuentaInfo from "../components/CuentaInfo.vue";
 import useCuentas from "../composables/useCuentas";
-import MovimientosCuentaTable from "../components/MovimientosCuentaTable.vue";
+import useUI from "@/modules/dashboard/composables/useUI";
 
 export default {
   components: {
@@ -37,20 +45,22 @@ export default {
     CardHeader,
     CardBody,
     TitleText,
-    // MovimientosTable,
     CuentaInfo,
     MovimientosCuentaTable,
+    Loading,
   },
   setup() {
     const route = useRoute();
     const { id } = route.params;
 
     const { loadCuenta, cuenta } = useCuentas();
+    const { isLoading } = useUI();
 
     loadCuenta(id);
 
     return {
       cuenta,
+      isLoading,
     };
   },
 };

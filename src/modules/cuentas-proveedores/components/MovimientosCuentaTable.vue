@@ -22,11 +22,13 @@
           <td
             class="py-4 px-6 font-medium text-right"
             :class="{
-              'text-green-400 dark:text-green-500': movement.state === 'Conciliado',
-              'text-red-400 dark:text-red-500': movement.state === 'No Conciliado',
+              'text-green-400 dark:text-green-500':
+                movement.state === 'Conciliado',
+              'text-red-400 dark:text-red-500':
+                movement.state === 'No Conciliado',
             }"
           >
-            ${{ (movement.monto > 0) ? movement.monto : movement.monto  * -1}}
+            ${{ movement.monto > 0 ? movement.monto : movement.monto * -1 }}
           </td>
         </TableRow>
       </TableBody>
@@ -37,9 +39,7 @@
       >
         TOTAL:
       </p>
-      <p class="py-4 px-6 font-medium text-right">
-        ${{ totalMovimientos }}
-      </p>
+      <p class="py-4 px-6 font-medium text-right">${{ totalMovimientos }}</p>
     </div>
   </template>
   <div v-else>La cuenta aun no posee movimientos</div>
@@ -50,7 +50,7 @@ import Table from "../../../components/Table.vue";
 import TableHead from "../../../components/TableHead.vue";
 import TableBody from "../../../components/TableBody.vue";
 import TableRow from "../../../components/TableRow.vue";
-import useCuentasProveedores from '../composables/useCuentasProveedores';
+import useCuentasProveedores from "../composables/useCuentasProveedores";
 export default {
   components: {
     Table,
@@ -60,7 +60,7 @@ export default {
   },
 
   setup() {
-    const { cuenta, totalMovimientos  } = useCuentasProveedores();
+    const { cuenta, totalMovimientos } = useCuentasProveedores();
     return { cuenta, totalMovimientos };
   },
 };

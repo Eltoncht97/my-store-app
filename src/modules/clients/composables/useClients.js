@@ -29,6 +29,7 @@ const useClients = () => {
         filterTxt: pagination.value.filterTxt,
         limit: limited ? pagination.value.limit : "",
         offset: pagination.value.offset,
+        filterSaldo: filterSaldo.value,
       }
     );
 

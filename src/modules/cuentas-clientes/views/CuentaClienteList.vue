@@ -5,7 +5,7 @@
       <div class="flex">
         <select
           class="mr-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-          @change="filterClients('')"
+          @change="loadClients()"
           v-model="filterSaldo"
         >
           <option selected value="todos">Todos</option>
@@ -20,30 +20,27 @@
       </div>
     </CardHeader>
     <CardBody>
-      <SearchInput @on:filter="filterClients" />
-      <CuentasTable />
+      <SearchInput @on:filter="loadClients" v-model="pagination.filterTxt" />
+      <Loading v-if="isLoading" />
+      <CuentasTable v-else />
       <div
+        v-if="!isLoading"
         :class="`flex align-center ${
-          totalClients > pagination.limit ? 'justify-between' : 'justify-end'
+          pagination.totalPages > 1 ? 'justify-between' : 'justify-end'
         }`"
       >
-        <Pagination v-if="totalClients > pagination.limit" />
-        <select
-          class="mr-2 mt-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-          v-model="pagination.limit"
-          @change="loadClients"
-        >
-          <option :value="5">5</option>
-          <option :value="10">10</option>
-          <option :value="15">15</option>
-          <option :value="20">20</option>
-        </select>
+        <Pagination
+          v-if="pagination.totalPages > 1"
+          @on:updatePage="loadClients"
+        />
+        <ItemsPerPage v-model="pagination.limit" @on:select="loadClients" />
       </div>
     </CardBody>
   </Card>
 </template>
 
 <script>
+import { onUnmounted } from "vue";
 import Card from "@/components/Card.vue";
 import CardHeader from "@/components/CardHeader.vue";
 import CardBody from "@/components/CardBody.vue";
@@ -52,6 +49,9 @@ import TitleText from "@/components/TitleText.vue";
 import SearchInput from "@/components/SearchInput.vue";
 import CuentasTable from "../components/CuentasTable.vue";
 import Pagination from "@/components/Pagination.vue";
+import useUI from "@/modules/dashboard/composables/useUI";
+import ItemsPerPage from "@/components/ItemsPerPage.vue";
+import Loading from "@/components/Loading.vue";
 
 export default {
   components: {
@@ -62,23 +62,24 @@ export default {
     SearchInput,
     Pagination,
     CuentasTable,
+    ItemsPerPage,
+    Loading,
   },
   setup() {
-    const {
-      loadClients,
-      filterClients,
-      filterSaldo,
-      totalClients,
-      pagination,
-    } = useClients();
+    const { loadClients, filterSaldo } = useClients();
+    const { pagination, isLoading, resetPagination } = useUI();
 
     loadClients();
 
+    onUnmounted(() => {
+      resetPagination();
+    });
+
     return {
-      filterClients,
+      isLoading,
       filterSaldo,
-      totalClients,
       pagination,
+      loadClients,
     };
   },
 };

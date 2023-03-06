@@ -38,19 +38,19 @@
 </template>
 
 <script>
+import { onUnmounted } from "vue";
 import Card from "@/components/Card.vue";
 import CardHeader from "@/components/CardHeader.vue";
 import TitleText from "@/components/TitleText.vue";
 import CardBody from "@/components/CardBody.vue";
 import Loading from "@/components/Loading.vue";
 import SearchInput from "@/components/SearchInput.vue";
-import useUI from "@/modules/dashboard/composables/useUI";
-import useProveedores from "@/modules/proveedores/composables/useProveedores";
-import ProveedoresTable from "../components/ProveedoresTable.vue";
 import Pagination from "@/components/Pagination.vue";
 import LinkButton from "@/components/LinkButton.vue";
 import ItemsPerPage from "@/components/ItemsPerPage.vue";
-import { onUnmounted } from "vue";
+import ProveedoresTable from "../components/ProveedoresTable.vue";
+import useProveedores from "@/modules/proveedores/composables/useProveedores";
+import useUI from "@/modules/dashboard/composables/useUI";
 
 export default {
   components: {

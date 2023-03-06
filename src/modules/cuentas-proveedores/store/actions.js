@@ -8,6 +8,10 @@ export const getCuenta = async ({ commit }, id) => {
 
     if (!data) {
       commit("setCuenta", null);
+      return {
+        ok: false,
+        message: "Hubo un error al cargar la cuenta del proveedor.",
+      };
     }
 
     commit("setCuenta", data);
@@ -15,6 +19,9 @@ export const getCuenta = async ({ commit }, id) => {
     return { ok: true };
   } catch (error) {
     console.log(error);
-    return { ok: false, message: "Hubo un error al cargar la cuenta del proveedor." };
+    return {
+      ok: false,
+      message: "Hubo un error al cargar la cuenta del proveedor.",
+    };
   }
 };

@@ -4,13 +4,14 @@ import pukisApi from "@/api/pukisApi";
 
 export const getCuenta = async ({ commit }, id) => {
   try {
-    const { data } = await pukisApi.get(`/clients/accounts/${id}`);
+    const response = await pukisApi.get(`/clients/accounts/${id}`);
 
-    if (!data) {
+    if (!response.data) {
       commit("setCuenta", null);
+      return { ok: false, message: "Hubo un error al cargar la cuenta." };
     }
 
-    commit("setCuenta", data);
+    commit("setCuenta", response.data);
 
     return { ok: true };
   } catch (error) {

@@ -4,6 +4,7 @@
 export const getCuenta = (state) => {
   return state.cuenta;
 };
+
 export const getTotalMovimientos = (state) => {
   return state.cuenta.movimientos
     .map((m) => m.monto)

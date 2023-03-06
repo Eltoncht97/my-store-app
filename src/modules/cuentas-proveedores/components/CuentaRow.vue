@@ -23,7 +23,10 @@
   </td>
   <td class="flex justify-center items-center py-4 px-6 space-x-3">
     <router-link
-      :to="{ name: 'cuenta-proveedor-show', params: { id: proveedor.account.id } }"
+      :to="{
+        name: 'cuenta-proveedor-show',
+        params: { id: proveedor.account.id },
+      }"
       class="font-medium text-blue-600 dark:text-blue-500 hover:underline"
     >
       <ViewIcon />
