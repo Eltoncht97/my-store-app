@@ -1,8 +1,7 @@
 // export const myAction = ( state, payload ) => {}
 
-export const setProveedores = (state, { proveedores, count }) => {
+export const setProveedores = (state, proveedores) => {
   state.proveedores = proveedores;
-  state.pagination.totalProveedores = count;
 };
 
 export const setProveedor = (state, payload) => {

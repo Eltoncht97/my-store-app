@@ -14,7 +14,11 @@
       'text-red-400 dark:text-red-500': proveedor.account.saldo < 0,
     }"
   >
-  ${{ (proveedor.account.saldo > 0) ? proveedor.account.saldo : proveedor.account.saldo  * -1}}
+    ${{
+      proveedor.account.saldo > 0
+        ? proveedor.account.saldo
+        : proveedor.account.saldo * -1
+    }}
   </td>
   <td class="flex justify-center items-center py-4 px-6 space-x-3">
     <router-link
@@ -24,7 +28,7 @@
       <EditIcon />
     </router-link>
     <button
-      @click="launchDeleteProveedor(proveedor.id)"
+      @click="deleteProveedor(proveedor.id)"
       class="font-medium text-red-600 dark:text-red-500 hover:underline"
     >
       <DeleteIcon />
@@ -36,7 +40,6 @@
 import EditIcon from "@/components/icons/EditIcon.vue";
 import DeleteIcon from "@/components/icons/DeleteIcon.vue";
 import useProveedores from "../composables/useProveedores";
-import Swal from "sweetalert2";
 
 export default {
   components: { EditIcon, DeleteIcon },
@@ -49,25 +52,8 @@ export default {
   setup() {
     const { deleteProveedor } = useProveedores();
 
-    const launchDeleteProveedor = async (id) => {
-      const confirmDelete = await Swal.fire({
-        title: "Esta seguro de eliminar el proveedor?",
-        text: "No se podra revertir esto!",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "Eliminar!",
-        cancelButtonText: "Cancelar",
-      });
-
-      if (confirmDelete.isConfirmed) {
-        deleteProveedor(id);
-      }
-    };
-
     return {
-      launchDeleteProveedor,
+      deleteProveedor,
     };
   },
 };

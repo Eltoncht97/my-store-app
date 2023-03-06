@@ -15,7 +15,7 @@ export default {
     },
     {
       path: "/proveedores/nuevo",
-      name: "proveedores-create",
+      name: "proveedor-create",
       component: () =>
         import(
           /* webpackChunkName: "Proveedores create" */ "@/modules/proveedores/views/ProveedoresCreate.vue"
