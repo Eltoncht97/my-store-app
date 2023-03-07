@@ -12,6 +12,7 @@ import cuentasProveedores from "@/modules/cuentas-proveedores/store";
 import recibos from "@/modules/recibos/store";
 import proveedores from "@/modules/proveedores/store";
 import ordenesDeCompra from "@/modules/ordenes-de-compra/store";
+import pagos from "@/modules/pagos/store";
 
 const store = createStore({
   modules: {
@@ -22,6 +23,7 @@ const store = createStore({
     cuentasClientes,
     cuentasProveedores,
     ordenesDeCompra,
+    pagos,
     products,
     proveedores,
     recibos,

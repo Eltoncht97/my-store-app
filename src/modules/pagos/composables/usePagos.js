@@ -5,31 +5,28 @@ import useVuelidate from "@vuelidate/core";
 
 import { errorAlert, successAlert } from "@/utils/customAlerts";
 import { isValidForm } from "@/utils/isValidForm";
-import { reciboRules } from "../utils/reciboRules";
+import { pagoRules } from "../utils/pagoRules";
 
-const useRecibos = () => {
+const usePagos = () => {
   const store = useStore();
   const router = useRouter();
 
   const pagination = computed(() => store.getters["ui/getPagination"]);
 
-  const recibo = computed(() => store.getters["recibos/getRecibo"]);
-  const rules = computed(() => reciboRules);
+  const pago = computed(() => store.getters["pagos/getPago"]);
+  const rules = computed(() => pagoRules);
 
-  const v$ = useVuelidate(rules, recibo);
+  const v$ = useVuelidate(rules, pago);
 
-  const loadRecibos = async ({ isFilter = false, limited = true } = {}) => {
+  const loadPagos = async ({ isFilter = false, limited = true } = {}) => {
     store.commit("ui/setLoading", true);
     store.commit("ui/updateOffset", { isFilter });
 
-    const { ok, message, totalItems } = await store.dispatch(
-      "recibos/loadRecibos",
-      {
-        filterTxt: pagination.value.filterTxt,
-        limit: limited ? pagination.value.limit : "",
-        offset: pagination.value.offset,
-      }
-    );
+    const { ok, message, totalItems } = await store.dispatch("pagos/getPagos", {
+      filterTxt: pagination.value.filterTxt,
+      limit: limited ? pagination.value.limit : "",
+      offset: pagination.value.offset,
+    });
 
     if (!ok) return errorAlert({ text: message });
 
@@ -37,35 +34,35 @@ const useRecibos = () => {
     store.commit("ui/setLoading", false);
   };
 
-  const loadRecibo = async (id) => {
+  const loadPago = async (id) => {
     store.commit("ui/setLoading", true);
 
-    const { ok, message } = await store.dispatch("recibos/getRecibo", id);
+    const { ok, message } = await store.dispatch("pagos/getPago", id);
 
     store.commit("ui/setLoading", false);
     if (!ok) return errorAlert({ text: message });
   };
 
-  const createRecibo = async (redirect = true) => {
+  const createPago = async (redirect = true) => {
     if (!isValidForm(rules.value, v$.value)) return;
     store.commit("ui/setLoadingButton", true);
 
     const { ok, message } = await store.dispatch(
-      "recibos/createRecibo",
-      recibo.value
+      "pagos/createPago",
+      pago.value
     );
 
     store.commit("ui/setLoadingButton", false);
     if (!ok) return errorAlert({ text: message });
 
     successAlert({ text: message });
-    loadRecibos();
+    loadPagos();
 
     if (!redirect) {
       return;
     }
 
-    router.push({ name: "recibos-list" });
+    router.push({ name: "pagos-list" });
   };
 
   //TODO
@@ -85,15 +82,15 @@ const useRecibos = () => {
   // };
 
   return {
-    recibo,
-    recibos: computed(() => store.getters["recibos/getRecibos"]),
+    pago,
+    pagos: computed(() => store.getters["pagos/getPagos"]),
     v$,
 
-    createRecibo,
-    loadRecibos,
-    loadRecibo,
-    resetRecibo: () => store.commit("recibos/resetRecibo"),
+    createPago,
+    loadPagos,
+    loadPago,
+    resetPago: () => store.commit("pagos/resetPago"),
   };
 };
 
-export default useRecibos;
+export default usePagos;
