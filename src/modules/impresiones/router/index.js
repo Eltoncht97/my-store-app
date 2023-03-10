@@ -3,7 +3,7 @@ export default {
   component: () => import(/* webpackChunkName: "Impresiones layout" */ '@/modules/impresiones/layouts/ImpresionesLayout.vue'),
   children: [
     {
-      path: ':tipo',
+      path: ':type/:id',
       name: 'impresion-create',
       component: () => import(/* webpackChunkName: "Impresion view" */ '@/modules/impresiones/views/Impresion.vue'),
     }

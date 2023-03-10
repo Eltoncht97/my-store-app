@@ -8,15 +8,19 @@ import "flowbite";
 import vSelect from "vue-select";
 import "vue-select/dist/vue-select.css";
 import moment from "moment";
+import Print from 'vue-print-nb'
 // uso font awesome?
 import "./utils/icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import 'vue-sidebar-menu/dist/vue-sidebar-menu.css'
 
+
+
 const app = createApp(App)
   .use(store)
   .use(router)
   .use(VueSidebarMenu)
+  .use(Print)
   .component("v-select", vSelect)
   .component("font-awesome-icon", FontAwesomeIcon);
 

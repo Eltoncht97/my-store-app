@@ -24,6 +24,9 @@
         </div>
         <div>
           <Input label="Factura" v-model="ingreso.factura" placeholder="N° de Factura" />
+          <p class="mt-2 text-sm text-red-600 dark:text-red-500" v-if="false">
+            <span class="font-medium">La factura es requerida</span>
+          </p>
         </div>
         <div>
           <label for="date" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Fecha</label>

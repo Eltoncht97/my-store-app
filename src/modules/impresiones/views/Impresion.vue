@@ -10,8 +10,9 @@
         <div class="button-group">
           <!-- <button @click="print" class="btn btn-primary">Imprimir</button> -->
           <!-- <Button text="Imprimir" @click="createVenta()" :loading="isLoading" /> -->
-          <Button text="Volver" type="danger" />
-          <Button text="Imprimir" @click="print" />
+
+          <Button text="Imprimir" v-print="printObj" />
+          <Button text="Volver" className="danger" />
         </div>
       </div>
     </div>
@@ -21,9 +22,11 @@
 <script>
 import HeaderImpresion from "../components/HeaderImpresion.vue";
 import BodyImpresion from "../components/BodyImpresion.vue";
-import Button from "@/components/Button.vue";
 import FooterImpresion from "../components/FooterImpresion.vue";
-import { Printd } from "printd";
+import Button from "@/components/Button.vue";
+import print from "vue3-print-nb";
+import { useRoute } from "vue-router";
+import useImpresiones from "../composables/useImpresiones";
 
 export default {
   components: {
@@ -32,24 +35,22 @@ export default {
     FooterImpresion,
     Button,
   },
-  methods: {
-    print() {
-      const d = new Printd();
+  directives: {
+    print,
+  },
+  setup() {
+    const route = useRoute();
+    const { type, id } = route.params;
+    const { loadDocument } = useImpresiones();
 
-      const styles = [
-        // 'http://localhost:8080/#/css/app.css',
-        "https://cdn.tailwindcss.com",
-        `
-        div {
-          background-color: red;
-        }
-        `
-        // 'https://ranz-sistema.herokuapp.com/css/app.css',
-        // 'https://ranz-sistema.herokuapp.com/css/pace.min.css'
-      ];
+    loadDocument({ type, id });
 
-      d.print(document.getElementById("invoice"), styles);
-    },
+    return {
+      printObj: {
+        id: "invoice",
+        previewTitle: "print Title",
+      },
+    };
   },
 };
 </script>

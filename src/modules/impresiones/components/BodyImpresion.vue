@@ -3,29 +3,8 @@
     <div class="px-2 py-3">
       <!-- tabla de detalle de pago -->
       <div class="relative">
-        <table
-          class="w-full text-sm text-left text-gray-500 dark:text-gray-400"
-        >
-          <thead
-            class="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-400"
-          >
-            <tr>
-              <th scope="col" class="px-6 py-3">Detalle</th>
-              <th scope="col" class="px-6 py-3">Total</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-              <th
-                scope="row"
-                class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-              >
-                Pago en efectivo
-              </th>
-              <td class="px-6 py-4">$40000</td>
-            </tr>
-          </tbody>
-        </table>
+        <ReciboFormat v-if="type == 'recibos' && document" />
+        <VentaFormat v-if="type == 'ventas' && document" />
       </div>
       <!-- tabla de productos si tiene una venta relacionada -->
     </div>
@@ -33,7 +12,23 @@
 </template>
 
 <script>
-export default {};
+
+import { useRoute } from "vue-router";
+import useImpresiones from "../composables/useImpresiones";
+import ReciboFormat from "./ReciboFormat.vue";
+import VentaFormat from "./VentaFormat.vue";
+export default {
+  setup() {
+    const route = useRoute();
+    const type = route.params.type;
+    const { document } = useImpresiones();
+    return {
+      type,
+      document,
+    };
+  },
+  components: { ReciboFormat, VentaFormat },
+};
 </script>
 
 <style scoped>

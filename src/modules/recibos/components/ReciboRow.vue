@@ -20,7 +20,7 @@
       ><ViewIcon
     /></router-link>
     <router-link
-      :to="{ name: 'recibo-show', params: { id: recibo.id } }"
+      :to="{ name: 'impresion-create', params: { type: 'recibos', id: recibo.id } }"
       class="font-medium text-yellow-600 dark:text-yellow-500 hover:underline"
       ><i class="fa-solid fa-print"></i
     ></router-link>

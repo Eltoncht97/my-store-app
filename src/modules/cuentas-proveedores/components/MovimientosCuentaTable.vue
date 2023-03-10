@@ -5,6 +5,7 @@
         <th scope="col" class="py-3 px-6">Fecha</th>
         <th scope="col" class="py-3 px-6">Descripcion</th>
         <th scope="col" class="py-3 px-6 text-right">Monto</th>
+        <th scope="col" class="w-10 py-3 px-6 text-center">Link</th>
       </TableHead>
       <TableBody>
         <TableRow v-for="(movement, index) in cuenta.movimientos" :key="index">
@@ -22,13 +23,25 @@
           <td
             class="py-4 px-6 font-medium text-right"
             :class="{
-              'text-green-400 dark:text-green-500':
-                movement.state === 'Conciliado',
-              'text-red-400 dark:text-red-500':
-                movement.state === 'No Conciliado',
+              'text-green-400 dark:text-green-500': movement.monto > 0,
+              'text-red-400 dark:text-red-500': movement.monto < 0,
             }"
           >
             ${{ movement.monto > 0 ? movement.monto : movement.monto * -1 }}
+          </td>
+          <td
+            class="w-20 py-4 px-6 flex justify-center items-center font-medium text-right"
+          >
+            <router-link
+              :to="{
+                name: movement.description.toLowerCase().includes('pago')
+                  ? 'pago-show'
+                  : 'orden-de-compra-show',
+                params: { id: movement.operationId },
+              }"
+              class="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+              ><ViewIcon
+            /></router-link>
           </td>
         </TableRow>
       </TableBody>
@@ -39,7 +52,15 @@
       >
         TOTAL:
       </p>
-      <p class="py-4 px-6 font-medium text-right">${{ totalMovimientos }}</p>
+      <p
+        class="py-4 px-6 font-medium text-right"
+        :class="{
+          'text-green-400 dark:text-green-500': totalMovimientos > 0,
+          'text-red-400 dark:text-red-500': totalMovimientos < 0,
+        }"
+      >
+        ${{ totalMovimientos }}
+      </p>
     </div>
   </template>
   <div v-else>La cuenta aun no posee movimientos</div>
@@ -51,12 +72,14 @@ import TableHead from "../../../components/TableHead.vue";
 import TableBody from "../../../components/TableBody.vue";
 import TableRow from "../../../components/TableRow.vue";
 import useCuentasProveedores from "../composables/useCuentasProveedores";
+import ViewIcon from "@/components/icons/ViewIcon.vue";
 export default {
   components: {
     Table,
     TableHead,
     TableBody,
     TableRow,
+    ViewIcon,
   },
 
   setup() {

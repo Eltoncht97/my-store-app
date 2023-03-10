@@ -3,8 +3,9 @@
     scope="row"
     class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white"
   >
-    {{ venta.client.lastname }} {{ venta.client.name }}
+    V-{{ venta.voucher.code }}
   </th>
+  <td class="py-4 px-6">{{ venta.client.lastname }} {{ venta.client.name }}</td>
   <td class="py-4 px-6">{{ $filters.formatDate(venta.date) }}</td>
   <td class="py-4 px-6">{{ venta.paymentMethod }}</td>
   <td class="py-4 px-6">${{ venta.total }}</td>
@@ -15,6 +16,11 @@
     >
       <ViewIcon />
     </router-link>
+    <router-link
+      :to="{ name: 'impresion-create', params: { type: 'ventas', id: venta.id } }"
+      class="font-medium text-yellow-600 dark:text-yellow-500 hover:underline"
+      ><i class="fa-solid fa-print"></i
+    ></router-link>
     <button
       @click="deleteVenta(venta.id)"
       class="font-medium text-red-600 dark:text-red-500 hover:underline"

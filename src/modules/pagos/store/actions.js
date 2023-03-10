@@ -53,19 +53,6 @@ export const createPago = async (_, data) => {
       return { ok: false, message: "Hubo un error al crear el pago" };
     }
 
-    const movimientoResponse = await pukisApi.post("cajas/movimiento", {
-      tipo: data.paymentMethod,
-      description: `Cobro ${data.paymentMethod} ${proveedor.lastname} ${proveedor.name}`,
-      monto: data.total,
-    });
-
-    if (!movimientoResponse.data) {
-      return {
-        ok: false,
-        message: "Hubo un problema al crear el movimiento en caja",
-      };
-    }
-
     return { ok: true, message: "Pago creado exitosamente" };
   } catch (error) {
     console.log(error);
