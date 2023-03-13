@@ -13,35 +13,21 @@
     <div class="mt-8">
       <form @submit.prevent="onSubmit">
         <div>
-          <label
-            for="email"
-            class="block mb-2 text-sm text-gray-600 dark:text-gray-200"
+          <label class="block mb-2 text-sm text-gray-600 dark:text-gray-200"
             >Email</label
           >
           <input
             type="email"
-            name="email"
-            id="email"
+            v-model="userForm.email"
             placeholder="example@example.com"
             class="block w-full px-4 py-2 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-lg dark:placeholder-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:border-gray-700 focus:border-blue-400 dark:focus:border-blue-400 focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40"
-            v-model="userForm.email"
           />
         </div>
 
         <div class="mt-6">
-          <div class="flex justify-between mb-2">
-            <label
-              for="password"
-              class="text-sm text-gray-600 dark:text-gray-200"
-              >Contraseña</label
-            >
-            <a
-              href="#"
-              class="text-sm text-gray-400 focus:text-blue-500 hover:text-blue-500 hover:underline"
-              >Olvidaste tu contraseña?</a
-            >
-          </div>
-
+          <label class="text-sm text-gray-600 dark:text-gray-200"
+            >Contraseña</label
+          >
           <input
             type="password"
             name="password"
@@ -88,10 +74,10 @@ export default {
         const { ok, message } = await loginUser(userForm.value);
 
         if (!ok) {
-          Swal.fire("Error", message, "error");
-        } else {
-          router.push({ name: "venta-create" });
+          return Swal.fire("Error", message, "error");
         }
+
+        router.push({ name: "venta-create" });
       },
     };
   },

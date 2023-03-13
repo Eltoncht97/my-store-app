@@ -1,89 +1,51 @@
 <template>
-  <nav
-    class="relative bg-white px-2 sm:px-4 py-2.5 dark:bg-gray-900 fixed w-full z-20 top-0 left-0 border-b border-gray-200 dark:border-gray-600"
-  >
-    <div class="container flex flex-wrap items-center justify-between mx-auto">
-      <router-link :to="{ name: 'venta-create' }" class="flex items-center">
-        <img
-          src="https://flowbite.com/docs/images/logo.svg"
-          class="h-6 mr-3 sm:h-9"
-          alt="Flowbite Logo"
-        />
-        <span
-          class="self-center text-xl font-semibold whitespace-nowrap dark:text-white"
-          >Pukis</span
-        >
-      </router-link>
-      <div class="flex md:order-2">
-        <router-link
-          :to="{ name: 'venta-create' }"
-          class="block text-white bg-gradient-to-r from-green-400 via-green-500 to-green-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-green-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2"
-          >Nueva Venta
-        </router-link>
-        <button
-          data-collapse-toggle="navbar-sticky"
-          type="button"
-          class="inline-flex items-center p-2 text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
-          aria-controls="navbar-sticky"
-          aria-expanded="false"
-          @click="toggleSideMenu"
-        >
-          <span class="sr-only">Open main menu</span>
-          <svg
-            class="w-6 h-6"
-            aria-hidden="true"
-            fill="currentColor"
-            viewBox="0 0 20 20"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              fill-rule="evenodd"
-              d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
-              clip-rule="evenodd"
-            ></path>
-          </svg>
-        </button>
-      </div>
-      <div
-        class="items-center justify-between w-full md:flex md:w-auto md:order-1"
-        id="navbar-sticky"
-        :class="!sideMenuOpen && 'sm:hidden'"
-      >
-        <ul
-          class="flex flex-col p-4 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700"
-        >
-          <li v-for="(route, index) in routes" :key="index">
-            <router-link
-              :to="{ name: route.to }"
-              :class="currentRoute===route.to ? 'block py-2 pl-3 pr-4 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 dark:text-white' : 'block py-2 pl-3 pr-4 text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-white dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700' "
-              @click="toggleSideMenu"
-            >
-              {{ route.name }}
-            </router-link>
-          </li>
-        </ul>
-      </div>
-    </div>
-  </nav>
+  <Navbar>
+    <template #logo>
+      <h2 class="text-lg"><strong>Pukis</strong></h2>
+    </template>
+    <template #right-side>
+      <dropdown :text="username">
+        <list-group>
+          <list-group-item v-on:click="logout">
+            <template #prefix>
+              <svg
+                class="w-4 h-4 fill-current"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z"
+                  clip-rule="evenodd"
+                ></path>
+              </svg>
+            </template>
+            Cerrar Sesion
+          </list-group-item>
+        </list-group>
+      </dropdown>
+    </template>
+  </Navbar>
 </template>
 
 <script>
-import { useRoute } from 'vue-router';
-import routes from "@/utils/routes";
-import useUI from "../composables/useUI";
-import { computed } from 'vue';
+import useAuth from "@/modules/auth/composables/useAuth";
+import { Dropdown, ListGroup, ListGroupItem, Navbar } from "flowbite-vue";
 
 export default {
+  components: {
+    Dropdown,
+    ListGroup,
+    ListGroupItem,
+    Navbar,
+  },
   setup() {
-    const currentRoute = computed(() => {
-      return useRoute().name
-    })
-    const { sideMenuOpen, toggleSideMenu } = useUI();
+    const { username, logout } = useAuth();
+
     return {
-      currentRoute,
-      routes,
-      sideMenuOpen,
-      toggleSideMenu,
+      username,
+      logout,
     };
   },
 };

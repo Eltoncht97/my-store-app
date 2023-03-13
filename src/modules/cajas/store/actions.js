@@ -1,33 +1,24 @@
 import pukisApi from "@/api/pukisApi";
 
 // export const myAction = async ({ commit }) => {}
-export const loadCajas = async ({ commit }) => {
+export const getCajas = async ({ commit }, params) => {
+  const { filterTxt = "", limit = 10, offset = 0 } = params;
   try {
-    const response = await pukisApi.get("/cajas");
+    const response = await pukisApi.get(
+      `/cajas?limit=${limit}&offset=${offset}&keyword=${filterTxt}`
+    );
 
     if (!response.data) {
       commit("setCajas", []);
-      return;
+      return { ok: false, message: "Hubo un error al cargar las cajas" };
     }
 
-    commit("setCajas", response.data);
+    commit("setCajas", response.data.cajas);
 
-    return { ok: true };
+    return { ok: true, totalItems: response.data.count };
   } catch (error) {
     console.log(error);
     return { ok: false, message: "Hubo un error al cargar las cajas" };
-  }
-};
-
-export const deleteCaja = async ({ commit }, id) => {
-  try {
-    await pukisApi.delete(`/cajas/${id}`);
-
-    commit("removeCaja", id);
-    return { ok: true };
-  } catch (error) {
-    console.log(error);
-    return { ok: false, message: "Hubo un error al eliminar la caja" };
   }
 };
 
@@ -37,7 +28,7 @@ export const getCaja = async ({ commit }, id) => {
 
     if (!response.data) {
       commit("setCaja", null);
-      return;
+      return { ok: false, message: "Hubo un error al cargar la caja" };
     }
 
     commit("setCaja", response.data);
@@ -49,13 +40,16 @@ export const getCaja = async ({ commit }, id) => {
   }
 };
 
-export const getInformeCaja = async (
-  { commit },
-  dates
-) => {
+export const getInformeCaja = async ({ commit }, dates) => {
   try {
-    const response = await pukisApi.get(`/cajas/movimientos?startDate=${dates.startDate}&endDate=${dates.endDate}`, { dates });
-    const response2 = await pukisApi.get(`/ventas/report?startDate=${dates.startDate}&endDate=${dates.endDate}`, { dates });
+    const response = await pukisApi.get(
+      `/cajas/movimientos?startDate=${dates.startDate}&endDate=${dates.endDate}`,
+      { dates }
+    );
+    const response2 = await pukisApi.get(
+      `/ventas/report?startDate=${dates.startDate}&endDate=${dates.endDate}`,
+      { dates }
+    );
 
     console.log(response);
     console.log(response2);
@@ -64,7 +58,10 @@ export const getInformeCaja = async (
       return;
     }
 
-    commit("setInformeCaja", {movimientos: response.data, ventas: response2.data});
+    commit("setInformeCaja", {
+      movimientos: response.data,
+      ventas: response2.data,
+    });
 
     return { ok: true };
   } catch (error) {

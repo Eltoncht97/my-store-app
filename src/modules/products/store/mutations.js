@@ -9,7 +9,7 @@ export const setProducts = (state, products) => {
 export const setProduct = (state, product) => {
   state.product = {
     ...product,
-    category: product.category.id,
+    categoryId: product.category.id,
     iva: computed(() => {
       return (product.costWithoutIva * getIVAValue(product.ivaType)) / 100;
     }),
@@ -23,7 +23,7 @@ export const setProduct = (state, product) => {
 export const resetProduct = (state) => {
   state.product = {
     name: "",
-    category: "",
+    categoryId: "",
     code: "",
     stock: 0,
     stockMin: 0,

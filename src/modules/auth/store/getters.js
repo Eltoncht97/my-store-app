@@ -6,5 +6,5 @@ export const currentState = ( state ) => {
 }
 
 export const username = ( state ) => {
-    return state.user?.name || 'Daybook'
+    return state.user?.fullName || 'No Name'
 }

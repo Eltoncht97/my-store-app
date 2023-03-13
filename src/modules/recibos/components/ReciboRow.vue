@@ -20,11 +20,17 @@
       ><ViewIcon
     /></router-link>
     <router-link
-      :to="{ name: 'impresion-create', params: { type: 'recibos', id: recibo.id } }"
+      :to="{
+        name: 'impresion-create',
+        params: { type: 'recibos', id: recibo.id },
+      }"
       class="font-medium text-yellow-600 dark:text-yellow-500 hover:underline"
       ><i class="fa-solid fa-print"></i
     ></router-link>
-    <button class="font-medium text-red-600 dark:text-red-500 hover:underline">
+    <button
+      class="font-medium text-red-600 dark:text-red-500 hover:underline"
+      @click="deleteRecibo(recibo.id)"
+    >
       <DeleteIcon />
     </button>
   </td>
@@ -33,6 +39,7 @@
 <script>
 import DeleteIcon from "@/components/icons/DeleteIcon.vue";
 import ViewIcon from "@/components/icons/ViewIcon.vue";
+import useRecibos from "../composables/useRecibos";
 
 export default {
   components: { DeleteIcon, ViewIcon },
@@ -41,6 +48,13 @@ export default {
       type: Object,
       required: true,
     },
+  },
+  setup() {
+    const { deleteRecibo } = useRecibos();
+
+    return {
+      deleteRecibo,
+    };
   },
 };
 </script>

@@ -3,7 +3,7 @@ import { useRouter } from "vue-router";
 import { useStore } from "vuex";
 import useVuelidate from "@vuelidate/core";
 
-import { errorAlert, successAlert } from "@/utils/customAlerts";
+import { confirmAlert, errorAlert, successAlert } from "@/utils/customAlerts";
 import { isValidForm } from "@/utils/isValidForm";
 import { reciboRules } from "../utils/reciboRules";
 
@@ -69,20 +69,20 @@ const useRecibos = () => {
   };
 
   //TODO
-  // const deleteRecibo = async (id) => {
-  //   const isConfirmed = await confirmAlert({
-  //     title: "Esta seguro de eliminar el recibo?",
-  //   });
+  const deleteRecibo = async (id) => {
+    const isConfirmed = await confirmAlert({
+      title: "Esta seguro de eliminar el recibo?",
+    });
 
-  //   if (!isConfirmed) return;
+    if (!isConfirmed) return;
 
-  //   const { ok, message } = await store.dispatch("recibos/deleteRecibo", id);
+    const { ok, message } = await store.dispatch("recibos/deleteRecibo", id);
 
-  //   if (!ok) return errorAlert({ text: message });
+    if (!ok) return errorAlert({ text: message });
 
-  //   successAlert({ text: message });
-  //   loadRecibos();
-  // };
+    successAlert({ text: message });
+    loadRecibos();
+  };
 
   return {
     recibo,
@@ -92,6 +92,7 @@ const useRecibos = () => {
     createRecibo,
     loadRecibos,
     loadRecibo,
+    deleteRecibo,
     resetRecibo: () => store.commit("recibos/resetRecibo"),
   };
 };

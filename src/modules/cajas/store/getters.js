@@ -2,7 +2,7 @@
 // return state.something
 // }
 export const getCajas = (state) => {
-  return state.cajasFiltered;
+  return state.cajas;
 };
 
 export const getCaja = (state) => {

@@ -1,11 +1,10 @@
 import pukisApi from "@/api/pukisApi";
-import authApi from "@/api/pukisApi";
 
 export const createUser = async ({ commit }, user) => {
   const { name, email, password } = user;
 
   try {
-    const { data } = await authApi.post("/auth/register", {
+    const { data } = await pukisApi.post("/auth/register", {
       email,
       password,
       fullName: name,
@@ -33,7 +32,7 @@ export const createUser = async ({ commit }, user) => {
 export const signInUser = async ({ commit }, user) => {
   const { email, password } = user;
   try {
-    const { data } = await authApi.post("/auth/login", { email, password });
+    const { data } = await pukisApi.post("/auth/login", { email, password });
     const { token, ...userData } = data;
     commit("loginUser", { user: userData, token });
 
@@ -53,8 +52,7 @@ export const checkAuthentication = async ({ commit }) => {
   }
 
   try {
-    // mandartoken aqui
-    const { data } = await authApi.get("/auth/check-auth-status");
+    const { data } = await pukisApi.get("/auth/check-auth-status");
     const { token, ...user } = data;
 
     commit("loginUser", { user, token });

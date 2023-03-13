@@ -3,7 +3,7 @@
     scope="row"
     class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white"
   >
-    V-{{ venta.voucher.code }}
+    {{ venta.voucher.code }}
   </th>
   <td class="py-4 px-6">{{ venta.client.lastname }} {{ venta.client.name }}</td>
   <td class="py-4 px-6">{{ $filters.formatDate(venta.date) }}</td>

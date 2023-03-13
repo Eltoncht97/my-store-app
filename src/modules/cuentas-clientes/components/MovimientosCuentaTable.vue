@@ -19,7 +19,13 @@
           >
             {{ movement.description }}
           </td>
-          <td class="py-4 px-6 font-medium text-right">
+          <td
+            class="py-4 px-6 font-medium text-right"
+            :class="{
+              'text-green-400 dark:text-green-500': movement.monto > 0,
+              'text-red-400 dark:text-red-500': movement.monto < 0,
+            }"
+          >
             $ {{ movement.monto > 0 ? movement.monto : movement.monto }}
           </td>
         </TableRow>

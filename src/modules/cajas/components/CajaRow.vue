@@ -5,14 +5,15 @@
   >
     {{ caja.user.fullName }}
   </th>
+  <td class="py-4 px-6">{{ $filters.formatDate(caja.createdAt) }}</td>
   <td
     class="py-4 px-6"
     :class="{
-      'text-green-400 dark:text-green-500': !caja.deleted,
-      'text-red-400 dark:text-red-500': caja.deleted,
+      'text-green-400 dark:text-green-500': caja.state === 'Abierta',
+      'text-red-400 dark:text-red-500': caja.state === 'Cerrada',
     }"
   >
-    {{ !caja.deleted ? "Activo" : "Eliminado" }}
+    {{ caja.state === "Abierta" ? "Abierta" : "Cerrada" }}
   </td>
   <td class="py-4 px-6">${{ caja.saldo }}</td>
   <td class="flex justify-center items-center py-4 px-6 space-x-3">
@@ -21,35 +22,19 @@
       class="font-medium text-blue-600 dark:text-blue-500 hover:underline"
       ><ViewIcon
     /></router-link>
-    <button
-      v-if="!caja.deleted"
-      @click="deleteCaja(caja.id)"
-      class="font-medium text-red-600 dark:text-red-500 hover:underline"
-    >
-      <DeleteIcon />
-    </button>
   </td>
 </template>
 
 <script>
 import ViewIcon from "@/components/icons/ViewIcon.vue";
-import DeleteIcon from "@/components/icons/DeleteIcon.vue";
-import useCajas from "../composables/useCajas";
 
 export default {
-  components: { ViewIcon, DeleteIcon },
+  components: { ViewIcon },
   props: {
     caja: {
       type: Object,
       required: true,
     },
-  },
-  setup() {
-    const { deleteCaja } = useCajas();
-
-    return {
-      deleteCaja,
-    };
   },
 };
 </script>

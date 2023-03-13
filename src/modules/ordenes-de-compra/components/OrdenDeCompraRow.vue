@@ -38,7 +38,7 @@ export default {
   },
   setup() {
     return {
-      deleteVenta: () => alert("delete"),
+      deleteVenta: () => alert("En proceso..."),
     };
   },
 };

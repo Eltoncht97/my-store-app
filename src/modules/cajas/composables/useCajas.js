@@ -1,21 +1,42 @@
 import { computed } from "vue";
 import { useStore } from "vuex";
 import moment from "moment";
-import { confirmDelete, successAlert } from "../utils/alerts";
+import { errorAlert } from "@/utils/customAlerts";
 
 const useCajas = () => {
   const store = useStore();
 
-  const deleteCaja = async (id) => {
-    const confirm = await confirmDelete();
+  const pagination = computed(() => store.getters["ui/getPagination"]);
 
-    if (confirm) {
-      const resp = await store.dispatch("cajas/deleteCaja", id);
-      if (resp.ok) {
-        successAlert("Eliminado", "Caja eliminada");
+  const loadCajas = async ({ isFilter = false, limited = true } = {}) => {
+    store.commit("ui/setLoading", true);
+    store.commit("ui/updateOffset", { isFilter });
+
+    const { ok, message, totalItems } = await store.dispatch(
+      "cajas/getCajas",
+      {
+        filterTxt: pagination.value.filterTxt,
+        limit: limited ? pagination.value.limit : "",
+        offset: pagination.value.offset,
       }
-    }
+    );
+
+    if (!ok) return errorAlert({ text: message });
+
+    store.commit("ui/updateTotalItems", totalItems);
+    store.commit("ui/setLoading", false);
   };
+
+  const loadCaja = async (id) => {
+    store.commit("ui/setLoading", true);
+    const { ok, message } = await store.dispatch(
+      "cajas/getCaja",
+      id
+    );
+
+    store.commit("ui/setLoading", false);
+    if (!ok) return errorAlert({ text: message });
+  }
 
   const loadInformeCaja = async (dates) => {
     const formatedDates = { ...dates };
@@ -39,13 +60,8 @@ const useCajas = () => {
       () => store.getters["cajas/getTotalMovimientosInforme"]
     ),
 
-    loadCajas: async () => {
-      await store.dispatch("cajas/loadCajas");
-    },
-    loadCaja: async (id) => {
-      await store.dispatch("cajas/getCaja", id);
-    },
-    deleteCaja,
+    loadCajas,
+    loadCaja,
     resetCaja: () => store.commit("cajas/resetCaja"),
     loadInformeCaja,
   };

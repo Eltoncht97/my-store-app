@@ -53,18 +53,18 @@ export const createRecibo = async (_, reciboData) => {
       return { ok: false, message: "Hubo un error al crear el recibo" };
     }
 
-    const movimientoResponse = await pukisApi.post("cajas/movimiento", {
-      tipo: reciboData.paymentMethod,
-      description: `Cobro ${reciboData.paymentMethod} ${client.lastname} ${client.name}`,
-      monto: reciboData.total,
-    });
+    // const movimientoResponse = await pukisApi.post("cajas/movimiento", {
+    //   tipo: reciboData.paymentMethod,
+    //   description: `Cobro ${reciboData.paymentMethod} ${client.lastname} ${client.name}`,
+    //   monto: reciboData.total,
+    // });
 
-    if (!movimientoResponse.data) {
-      return {
-        ok: false,
-        message: "Hubo un problema al crear el movimiento en caja",
-      };
-    }
+    // if (!movimientoResponse.data) {
+    //   return {
+    //     ok: false,
+    //     message: "Hubo un problema al crear el movimiento en caja",
+    //   };
+    // }
 
     return { ok: true, message: "Recibo creado exitosamente" };
   } catch (error) {
@@ -73,13 +73,13 @@ export const createRecibo = async (_, reciboData) => {
   }
 };
 
-// export const deleteRecibo = async (_, id) => {
-//   try {
-//     await pukisApi.delete(`/recibos/${id}`);
+export const deleteRecibo = async (_, id) => {
+  try {
+    await pukisApi.delete(`/recibos/${id}`);
 
-//     return { ok: true, message: "El recibo a sido eliminado." };
-//   } catch (error) {
-//     console.log(error);
-//     return { ok: false, message: "Hubo un error al eliminar el recibo" };
-//   }
-// };
+    return { ok: true, message: "El recibo a sido eliminado." };
+  } catch (error) {
+    console.log(error);
+    return { ok: false, message: "Hubo un error al eliminar el recibo" };
+  }
+};

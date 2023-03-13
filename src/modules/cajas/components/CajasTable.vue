@@ -1,8 +1,12 @@
 <template>
-  <Table>
+  <template v-if="cajas.length == 0">
+    <div>No hay cajas cargadas aun...</div>
+  </template>
+  <Table v-else>
     <TableHead>
       <th scope="col" class="py-3 px-6">Usuario</th>
-      <th scope="col" class="py-3 px-6">Status</th>
+      <th scope="col" class="py-3 px-6">Fecha de Creación</th>
+      <th scope="col" class="py-3 px-6">Estado</th>
       <th scope="col" class="py-3 px-6">Total</th>
       <th scope="col" class="py-3 px-6 text-center">Opciones</th>
     </TableHead>

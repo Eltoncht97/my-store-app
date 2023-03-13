@@ -23,22 +23,26 @@
         </div></template
       >
     </sidebar-menu>
-    <div class="w-full p-4">
-      <router-view />
+    <div class="w-full main_content">
+      <Navbar />
+      <div class="p-4">
+        <router-view />
+      </div>
     </div>
   </div>
 </template>
 
 <script>
 import { ref } from "vue";
-// import routes from "@/utils/routes";
 import { menu } from "@/utils/sideMenuRoutes";
 import { SidebarMenu } from "vue-sidebar-menu";
+import Navbar from '@/modules/dashboard/components/Navbar.vue'
 import "vue-sidebar-menu/dist/vue-sidebar-menu.css";
 
 export default {
   components: {
     SidebarMenu,
+    Navbar
   },
   setup() {
     const isCollapsed = ref(true);
@@ -84,4 +88,8 @@ export default {
 };
 </script>
 
-<style></style>
+<style scoped>
+.main_content {
+  max-width: calc(100% - 68px);
+}
+</style>

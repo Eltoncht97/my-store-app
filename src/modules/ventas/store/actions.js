@@ -20,7 +20,7 @@ export const getClients = async ({ commit }) => {
 
 export const getProducts = async ({ commit }) => {
   try {
-    const response = await pukisApi.get(`/products`);
+    const response = await pukisApi.get(`/products?limit=`);
 
     if (!response.data) {
       return;

@@ -1,5 +1,5 @@
 <template>
-  <div class="grid gap-6 mb-6 md:grid-cols-2">
+  <div class="grid gap-6 mb-6 md:grid-cols-2" v-if="product">
     <div>
       <Input label="Codigo de Busqueda" v-model="product.code" />
       <p
@@ -24,7 +24,7 @@
         >Categoria</label
       >
       <select
-        v-model="product.category"
+        v-model="product.categoryId"
         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
       >
         <option value="">Selecciona una categoria</option>
@@ -38,7 +38,7 @@
       </select>
       <p
         class="mt-2 text-sm text-red-600 dark:text-red-500"
-        v-if="v$.category.$error"
+        v-if="v$.categoryId.$error"
       >
         <span class="font-medium">La categoria es requerida</span>
       </p>

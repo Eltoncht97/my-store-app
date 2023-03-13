@@ -1,5 +1,5 @@
 import isAuthenticatedGuard from '@/modules/auth/router/auth-guard'
-import { createRouter, createWebHashHistory } from 'vue-router'
+import { createRouter, createWebHistory } from 'vue-router'
 
 import authRouter from '../modules/auth/router'
 import dashboardRouter from '../modules/dashboard/router'
@@ -17,7 +17,7 @@ const routes = [
 ]
 
 const router = createRouter({
-  history: createWebHashHistory(),
+  history: createWebHistory(),
   routes
 })
 

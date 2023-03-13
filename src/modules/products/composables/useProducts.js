@@ -49,8 +49,9 @@ const useProducts = () => {
     if (!ok) return errorAlert({ text: message });
   };
 
-  const createProduct = async (redirect = true) => {
-    if (!isValidForm(rules.value, v$.value)) return;
+  const createProduct = async ({ redirect = true } = {}) => {
+    if (!isValidForm(rules.value, v$.value)) return { ok: false };
+
     store.commit("ui/setLoadingButton", true);
 
     const { ok, message } = await store.dispatch(
@@ -65,9 +66,9 @@ const useProducts = () => {
     loadProducts();
 
     if (!redirect) {
-      return;
+      return { ok: true };
     }
-    router.push({ name: "clients-list" });
+    router.push({ name: "products-list" });
   };
 
   const updateProduct = async () => {

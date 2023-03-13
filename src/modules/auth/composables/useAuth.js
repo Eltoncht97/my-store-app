@@ -1,31 +1,33 @@
-import { computed } from "vue"
-import { useStore } from "vuex"
+import { computed } from "vue";
+import { useRouter } from "vue-router";
+import { useStore } from "vuex";
 
 const useAuth = () => {
-  const store = useStore()
+  const router = useRouter();
+  const store = useStore();
 
   const createUser = async (user) => {
-    const resp = await store.dispatch('auth/createUser', user)
+    const resp = await store.dispatch("auth/createUser", user);
 
-    return resp
-  }
+    return resp;
+  };
 
   const loginUser = async (user) => {
-    const resp = await store.dispatch('auth/signInUser', user)
+    const resp = await store.dispatch("auth/signInUser", user);
 
-    return resp
-  }
+    return resp;
+  };
 
   const checkAuthStatus = async () => {
-    const resp = await store.dispatch('auth/checkAuthentication')
+    const resp = await store.dispatch("auth/checkAuthentication");
 
-    return resp
-  }
+    return resp;
+  };
 
   const logout = () => {
-    store.commit('auth/logout')
-    // store.commit('journal/clearEntries')
-  }
+    store.commit("auth/logout");
+    router.push({ name: "login" });
+  };
 
   return {
     checkAuthStatus,
@@ -33,9 +35,9 @@ const useAuth = () => {
     loginUser,
     logout,
 
-    authStatus: computed(() => store.getters['auth/currentState']),
-    username: computed(() => store.getters['auth/username']),
-  }
-}
+    authStatus: computed(() => store.getters["auth/currentState"]),
+    username: computed(() => store.getters["auth/username"]),
+  };
+};
 
-export default useAuth
+export default useAuth;
