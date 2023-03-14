@@ -3,11 +3,12 @@ import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 import moment from "moment";
 import useVuelidate from "@vuelidate/core";
-import { required, minValue } from "@vuelidate/validators";
 
 import { customAlert } from "@/utils/customSweetAlerts";
 import { isValidForm } from "@/utils/isValidForm";
 import { getIVAValue } from "@/utils/getIvaValue";
+import { ordenDeCompraRules } from "../utils/ordenDeCompraRules";
+import { errorAlert } from "@/utils/customAlerts";
 
 const useOrdenesDeCompra = () => {
   const store = useStore();
@@ -16,6 +17,8 @@ const useOrdenesDeCompra = () => {
   const product = ref(null);
   const isEdit = ref(false);
   const isPDiscountPercentage = ref(false);
+
+  const pagination = computed(() => store.getters["ui/getPagination"]);
 
   const ordenesDeCompra = computed(
     () => store.getters["ordenesDeCompra/getOrdenesDeCompra"]
@@ -50,28 +53,30 @@ const useOrdenesDeCompra = () => {
     total: computed(() => ingreso.value.subtotal - ingreso.value.discount),
   });
 
-  const rules = computed(() => {
-    return {
-      proveedor: { required },
-      date: { required },
-      products: { required },
-      factura: { required },
-      subtotal: { required, minValue: minValue(1) },
-      total: { required, minValue: minValue(1) },
-    };
-  });
+  const rules = computed(() => ordenDeCompraRules);
 
   const v$ = useVuelidate(rules, ingreso.value);
 
-  const loadOrdenesDeCompra = async () => {
+  const loadOrdenesDeCompra = async ({
+    isFilter = false,
+    limited = true,
+  } = {}) => {
     store.commit("ui/setLoading", true);
-    const { ok, message } = await store.dispatch(
-      "ordenesDeCompra/getOrdenesDeCompra"
+    store.commit("ui/updateOffset", { isFilter });
+
+    const { ok, message, totalItems } = await store.dispatch(
+      "ordenesDeCompra/getOrdenesDeCompra",
+      {
+        filterTxt: pagination.value.filterTxt,
+        limit: limited ? pagination.value.limit : "",
+        offset: pagination.value.offset,
+      }
     );
+
+    if (!ok) return errorAlert({ text: message });
+
+    store.commit("ui/updateTotalItems", totalItems);
     store.commit("ui/setLoading", false);
-    if (!ok) {
-      customAlert("Error", message, "warning");
-    }
   };
 
   const loadOrdenDeCompra = async (id) => {
@@ -81,9 +86,7 @@ const useOrdenesDeCompra = () => {
       id
     );
     store.commit("ui/setLoading", false);
-    if (!ok) {
-      customAlert("Error", message, "warning");
-    }
+    if (!ok) return errorAlert({ text: message });
   };
 
   const togglePDiscountType = () => {

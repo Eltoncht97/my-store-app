@@ -6,7 +6,6 @@
       <th scope="col" class="py-3 px-6">Fecha</th>
       <th scope="col" class="py-3 px-6">M. Pago</th>
       <th scope="col" class="py-3 px-6">Total</th>
-      <!-- <th scope="col" class="py-3 px-6">Status</th> -->
       <th scope="col" class="py-3 px-6 text-center">Opciones</th>
     </TableHead>
     <TableBody>

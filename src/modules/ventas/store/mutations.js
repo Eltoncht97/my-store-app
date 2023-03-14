@@ -1,25 +1,13 @@
+import moment from "moment"
+import { computed } from "vue"
+
 // export const myAction = ( state, payload ) => {}
 export const setVentas = ( state, payload ) => {
   state.ventas = payload
-  state.ventasFiltered = payload
-}
-
-export const filterVentas = ( state, filterTxt ) => {
-  state.ventasFiltered = state.ventas.filter( venta => venta.client.name.toLowerCase().includes( filterTxt ) || venta.client.lastname.toLowerCase().includes( filterTxt ) )
 }
 
 export const setVenta = ( state, payload ) => {
   state.venta = payload
-}
-
-export const addVenta = ( state, payload ) => {
-  state.ventas.push(payload)
-  state.ventasFiltered.push(payload)
-}
-
-export const removeVenta = ( state, id ) => {
-  state.ventas = state.ventas.filter( venta => venta.id !== id)
-  state.ventasFiltered = state.ventas
 }
 
 export const setClients = ( state, payload ) => {
@@ -32,11 +20,26 @@ export const setProducts = ( state, payload ) => {
 
 export const resetVenta = ( state ) => {
   state.venta = {
-    client: '',
-    date: '',
+    client: "",
     products: [],
-    subtotal: 0,
-    total: 0
+    date: moment().format("yyyy-MM-DD"),
+    quantityProduct: 1,
+    discountProduct: 0,
+    discountValue: 0,
+    subtotalProduct: computed(
+      () =>
+        state.product &&
+        state.product.price * state.venta.quantityProduct -
+          state.venta.discountProduct * state.venta.quantityProduct
+    ),
+    discount: 0,
+    paymentMethod: "",
+    subtotal: computed(() =>
+      state.venta.products
+        .map((p) => p.total)
+        .reduce((prev, curr) => prev + curr, 0)
+    ),
+    total: computed(() => state.venta.subtotal - state.venta.discount),
   }
 }
 

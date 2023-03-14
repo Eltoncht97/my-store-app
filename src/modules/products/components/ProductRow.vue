@@ -11,19 +11,21 @@
   <td class="py-4 px-6">${{ product.costPrice }}</td>
   <td class="py-4 px-6">${{ product.utilities }}</td>
   <td class="py-4 px-6">${{ product.price }}</td>
-  <td class="flex justify-center items-center py-4 px-4 space-x-3">
-    <router-link
-      :to="{ name: 'product-edit', params: { id: product.id } }"
-      class="text-blue-600 dark:text-blue-500 hover:underline"
-    >
-      <EditIcon />
-    </router-link>
-    <button
-      @click="deleteProduct(product.id)"
-      class="text-red-600 dark:text-red-500 hover:underline"
-    >
-      <DeleteIcon />
-    </button>
+  <td class="py-4 px-6">
+    <div class="flex justify-center items-center space-x-3">
+      <router-link
+        :to="{ name: 'product-edit', params: { id: product.id } }"
+        class="text-blue-600 dark:text-blue-500 hover:underline"
+      >
+        <EditIcon />
+      </router-link>
+      <button
+        @click="deleteProduct(product.id)"
+        class="text-red-600 dark:text-red-500 hover:underline"
+      >
+        <DeleteIcon />
+      </button>
+    </div>
   </td>
 </template>
 

@@ -1,6 +1,45 @@
 // export const myAction = async ({ commit }) => {}
 import pukisApi from "@/api/pukisApi";
 
+export const getVentas = async ({ commit }, params) => {
+  const { filterTxt = "", limit = 10, offset = 0 } = params;
+  try {
+    const response = await pukisApi.get(
+      `/ventas?limit=${limit}&offset=${offset}&keyword=${filterTxt}`
+    );
+
+    if (!response.data) {
+      commit("setVentas", []);
+      return { ok: false, message: "Hubo un error al cargar las ventas" };
+    }
+
+    commit("setVentas", response.data.ventas);
+
+    return { ok: true, totalItems: response.data.count };
+  } catch (error) {
+    console.log(error);
+    return { ok: false, message: "Hubo un error al cargar las categorias" };
+  }
+};
+
+export const getVenta = async ({ commit }, id) => {
+  try {
+    const response = await pukisApi.get(`/ventas/${id}`);
+
+    if (!response.data) {
+      commit("setVenta", null);
+      return { ok: false, message: "Hubo un error al cargar la venta" };
+    }
+
+    commit("setVenta", response.data);
+
+    return { ok: true };
+  } catch (error) {
+    console.log(error);
+    return { ok: false, message: "Hubo un error al cargar la venta" };
+  }
+};
+
 export const getClients = async ({ commit }) => {
   try {
     const response = await pukisApi.get(`/clients?limit=0`);
@@ -52,7 +91,7 @@ export const createClient = async ({ dispatch }, data) => {
   }
 };
 
-export const createVenta = async ({ commit }, data) => {
+export const createVenta = async (_, data) => {
   try {
     const { client, date, subtotal, discount, total, paymentMethod, products } =
       { ...data };
@@ -76,60 +115,21 @@ export const createVenta = async ({ commit }, data) => {
     const response = await pukisApi.post(`/ventas`, ventaData);
 
     if (!response.data) {
-      return;
+      return { ok: false, message: "Hubo un error al crear la venta" };
     }
 
-    commit("addVenta", response.data);
-
-    return { ok: true };
+    return { ok: true, message: "Venta creada exitosamente" };
   } catch (error) {
     console.log(error);
     return { ok: false, message: "Hubo un error al crear la venta" };
   }
 };
 
-export const loadVentas = async ({ commit }) => {
-  try {
-    const response = await pukisApi.get("/ventas");
-
-    if (!response.data) {
-      commit("setVentas", []);
-      return;
-    }
-
-    commit("setVentas", response.data);
-
-    return { ok: true };
-  } catch (error) {
-    console.log(error);
-    return { ok: false, message: "Hubo un error al cargar las categorias" };
-  }
-};
-
-export const getVenta = async ({ commit }, id) => {
-  try {
-    const response = await pukisApi.get(`/ventas/${id}`);
-
-    if (!response.data) {
-      commit("setVenta", null);
-      return;
-    }
-
-    commit("setVenta", response.data);
-
-    return { ok: true };
-  } catch (error) {
-    console.log(error);
-    return { ok: false, message: "Hubo un error al cargar la venta" };
-  }
-};
-
-export const deleteVenta = async ({ commit }, id) => {
+export const deleteVenta = async (_, id) => {
   try {
     await pukisApi.delete(`/ventas/${id}`);
-    commit("removeVenta", id);
 
-    return { ok: true };
+    return { ok: true, message: "La venta a sido eliminada." };
   } catch (error) {
     console.log(error);
     return { ok: false, message: "Hubo un error al eliminar la venta" };

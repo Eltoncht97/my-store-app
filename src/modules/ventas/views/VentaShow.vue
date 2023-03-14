@@ -66,7 +66,7 @@
               $.
             </span>
             <input
-              class="rounded-none rounded-r-lg bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              class="rounded-none rounded-r-lg bg-gray-50 border border-gray-300 text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               type="string"
               :value="venta.subtotal"
               id="first_name"
@@ -156,9 +156,9 @@ export default {
   setup() {
     const route = useRoute();
     const { id } = route.params;
-    const { getVenta, ventaShow: venta, updateVenta } = useVentas();
+    const { loadVenta, ventaShow: venta, updateVenta } = useVentas();
 
-    getVenta(id);
+    loadVenta(id);
 
     return {
       venta,

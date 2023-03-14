@@ -5,13 +5,11 @@ import useVuelidate from "@vuelidate/core";
 import { required, minValue } from "@vuelidate/validators";
 import moment from "moment";
 
-import {
-  customAlert,
-  customConfirm,
-  handleError,
-} from "@/utils/customSweetAlerts";
+import { customAlert, handleError } from "@/utils/customSweetAlerts";
 import { paymentMethods } from "../utils/paymentMethods";
 import Swal from "sweetalert2";
+import { confirmAlert, errorAlert, successAlert } from "@/utils/customAlerts";
+import { isValidForm } from "@/utils/isValidForm";
 
 const useVentas = () => {
   const store = useStore();
@@ -22,6 +20,7 @@ const useVentas = () => {
   const filter = ref("");
   const product = ref(null);
   const products = computed(() => store.getters["ventas/getProducts"]);
+  const pagination = computed(() => store.getters["ui/getPagination"]);
 
   const venta = ref({
     client: "",
@@ -30,7 +29,12 @@ const useVentas = () => {
     quantityProduct: 1,
     discountProduct: 0,
     discountValue: 0,
-    subtotalProduct: computed(() => product.value && product.value.price * venta.value.quantityProduct - venta.value.discountProduct * venta.value.quantityProduct),
+    subtotalProduct: computed(
+      () =>
+        product.value &&
+        product.value.price * venta.value.quantityProduct -
+          venta.value.discountProduct * venta.value.quantityProduct
+    ),
     discount: 0,
     paymentMethod: "",
     subtotal: computed(() =>
@@ -57,6 +61,68 @@ const useVentas = () => {
 
   const v$ = useVuelidate(rules, venta.value);
 
+  const loadVentas = async ({ isFilter = false, limited = true } = {}) => {
+    store.commit("ui/setLoading", true);
+    store.commit("ui/updateOffset", { isFilter });
+    const { ok, message, totalItems } = await store.dispatch(
+      "ventas/getVentas",
+      {
+        filterTxt: pagination.value.filterTxt,
+        limit: limited ? pagination.value.limit : "",
+        offset: pagination.value.offset,
+      }
+    );
+
+    if (!ok) return errorAlert({ text: message });
+
+    store.commit("ui/updateTotalItems", totalItems);
+    store.commit("ui/setLoading", false);
+  };
+
+  const loadVenta = async (id) => {
+    store.commit("ui/setLoading", true);
+    const { ok, message } = await store.dispatch("ventas/getVenta", id);
+
+    store.commit("ui/setLoading", false);
+    if (!ok) return errorAlert({ text: message });
+  };
+
+  const createVenta = async (redirect = true) => {
+    if (!isValidForm(rules.value, v$.value)) return;
+    store.commit("ui/setLoadingButton", true);
+
+    const { ok, message } = await store.dispatch(
+      "ventas/createVenta",
+      venta.value
+    );
+
+    store.commit("ui/setLoadingButton", false);
+    if (!ok) return errorAlert({ text: message });
+
+    successAlert({ text: message });
+    loadVentas();
+
+    if (!redirect) {
+      return;
+    }
+    router.push({ name: "ventas-list" });
+  };
+
+  const deleteVenta = async (id) => {
+    const isConfirmed = await confirmAlert({
+      title: "Esta seguro de eliminar el proveedor?",
+    });
+
+    if (!isConfirmed) return;
+
+    const { ok, message } = await store.dispatch("ventas/deleteVenta", id);
+
+    if (!ok) return errorAlert({ text: message });
+
+    successAlert({ text: message });
+    loadVentas();
+  };
+
   const getClients = async () => {
     const resp = await store.dispatch("ventas/getClients");
     if (!resp.ok) {
@@ -72,24 +138,13 @@ const useVentas = () => {
   };
 
   const createClientVenta = async (data) => {
-    // if(!isValidForm()) return
-
-    // isLoading.value = true
-    const resp = await store.dispatch('ventas/createClient', data)
+    const resp = await store.dispatch("ventas/createClient", data);
     if (resp.ok) {
-      Swal.fire(
-        'Completado!',
-        'Cliente creado exitosamente!',
-        'success'
-      )
+      Swal.fire("Completado!", "Cliente creado exitosamente!", "success");
     } else {
-      customAlert(
-        "Error",
-        "Hubo un problema al crear el cliente",
-        "warning"
-      )
+      customAlert("Error", "Hubo un problema al crear el cliente", "warning");
     }
-  }
+  };
 
   const addProduct = () => {
     if (venta.value.products.find((p) => p.id === product.value.id)) {
@@ -172,61 +227,9 @@ const useVentas = () => {
     venta.value.discountProduct = 0;
   };
 
-  const resetFormulario = () => {
-    venta.value = {
-      client: "",
-      products: [],
-      date: "",
-      quantityProduct: 1,
-      discountProduct: 0,
-      discount: 0,
-    };
-    product.value = null;
-  };
-
   const deleteProduct = (id) => {
     venta.value.products = venta.value.products.filter((p) => p.id !== id);
   };
-
-  const createVenta = async () => {
-    if (!isValidForm()) return;
-
-    const resp = await store.dispatch("ventas/createVenta", venta.value);
-
-    if (resp.ok) {
-      customAlert("Venta creada exitosamente!", "", "success");
-      router.push({ name: "ventas-list" });
-    }
-
-    resetFormulario();
-  };
-
-  const loadVentas = async () => {
-    await store.dispatch("ventas/loadVentas");
-  };
-
-  const getVenta = async (id) => {
-    await store.dispatch("ventas/getVenta", id);
-  };
-
-  const deleteVenta = async (id) => {
-    const confirmDelete = await customConfirm(
-      "Esta seguro de eliminar la venta?",
-      "Se eliminaran todos los productos bajo esta categoria!",
-      "Eliminar!"
-    );
-
-    if (confirmDelete) {
-      const resp = await store.dispatch("ventas/deleteVenta", id);
-      if (resp.ok) {
-        customAlert("Venta eliminada!", "", "success");
-      }
-    }
-  };
-
-  // onUnmounted(() => {
-  //   store.commit('products/resetModule')
-  // })
 
   onMounted(() => {
     store.commit("ventas/resetVenta");
@@ -234,25 +237,12 @@ const useVentas = () => {
 
   const calcDiscount = () => {
     if (isDiscountPercentage.value) {
-      venta.value.discount = Math.round((venta.value.subtotal * venta.value.discountValue) / 100);
+      venta.value.discount = Math.round(
+        (venta.value.subtotal * venta.value.discountValue) / 100
+      );
     } else {
       venta.value.discount = venta.value.discountValue;
     }
-  };
-
-  const isValidForm = () => {
-    if (
-      !v$.value.client.$invalid &&
-      !v$.value.date.$invalid &&
-      !v$.value.products.$invalid &&
-      !v$.value.subtotal.$invalid &&
-      !v$.value.total.$invalid &&
-      !v$.value.paymentMethod.$invalid
-    ) {
-      return true;
-    }
-    v$.value.$touch();
-    return false;
   };
 
   return {
@@ -281,17 +271,17 @@ const useVentas = () => {
     filterVentas: (filterTxt) => store.commit("ventas/filterVentas", filterTxt),
     getClients,
     getProducts,
-    getVenta,
+    loadVenta,
     loadVentas,
     resetVenta: () => store.commit("ventas/resetVenta"),
     toggleDiscountType: () => {
-      (isDiscountPercentage.value = !isDiscountPercentage.value)
-      calcDiscount()
+      isDiscountPercentage.value = !isDiscountPercentage.value;
+      calcDiscount();
     },
     togglePDiscountType: () =>
       (isPDiscountPercentage.value = !isPDiscountPercentage.value),
     updateProduct,
-    createClientVenta
+    createClientVenta,
   };
 };
 

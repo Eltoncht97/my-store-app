@@ -2,16 +2,24 @@
 
 import pukisApi from "@/api/pukisApi";
 
-export const getOrdenesDeCompra = async ({ commit }) => {
+export const getOrdenesDeCompra = async ({ commit }, params) => {
+  const { filterTxt = "", limit = 10, offset = 0 } = params;
   try {
-    const response = await pukisApi.get(`/ordenes-ingreso`);
+    const response = await pukisApi.get(
+      `/ordenes-ingreso?limit=${limit}&offset=${offset}&keyword=${filterTxt}`
+    );
 
     if (!response.data) {
       commit("setOrdenesDeCompra", []);
-      return;
+      return {
+        ok: false,
+        message: "Hubo un error al cargar las ordenes de compra/ingreso",
+      };
     }
+
     commit("setOrdenesDeCompra", response.data.ingresos);
-    return { ok: true };
+
+    return { ok: true, totalItems: response.data.count };
   } catch (error) {
     console.log(error);
     return {
@@ -24,7 +32,9 @@ export const getOrdenesDeCompra = async ({ commit }) => {
 export const getOrdenDeCompra = async ({ commit }, id) => {
   try {
     const response = await pukisApi.get(`/ordenes-ingreso/${id}`);
+
     if (!response.data) {
+      commit("setOrdenDeIngreso", null);
       return {
         ok: false,
         message: "Hubo un error al taer los datos de la orden de ingreso",
@@ -43,9 +53,6 @@ export const getOrdenDeCompra = async ({ commit }, id) => {
 };
 
 export const createIngreso = async (_, data) => {
-  //peticion axios de create
-  console.log(data);
-
   try {
     const { proveedor, date, factura, subtotal, discount, total, products } = {
       ...data,
@@ -78,7 +85,7 @@ export const createIngreso = async (_, data) => {
       };
     }
 
-    return { ok: true };
+    return { ok: true, message: "Orden de Ingreso creada!" };
   } catch (error) {
     console.log(error);
     return {

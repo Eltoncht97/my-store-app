@@ -10,8 +10,24 @@
       </router-link>
     </CardHeader>
     <CardBody>
-      <!-- <SearchInput @on:filter="filterVentas" /> -->
-      <OrdenesDeCompraTable />
+      <SearchInput
+        @on:filter="loadOrdenesDeCompra"
+        v-model="pagination.filterTxt"
+      />
+      <Loading v-if="isLoading" />
+      <OrdenesDeCompraTable v-else />
+      <div
+        v-if="!isLoading"
+        :class="`flex align-center ${
+          pagination.totalPages > 1 ? 'justify-between' : 'justify-end'
+        }`"
+      >
+        <Pagination
+          v-if="pagination.totalPages > 1"
+          @on:updatePage="loadOrdenesDeCompra"
+        />
+        <ItemsPerPage v-model="pagination.limit" @on:select="loadOrdenesDeCompra" />
+      </div>
     </CardBody>
   </Card>
 </template>
@@ -23,13 +39,41 @@ import CardBody from "@/components/CardBody.vue";
 import TitleText from "@/components/TitleText.vue";
 import OrdenesDeCompraTable from "../components/OrdenesDeCompraTable.vue";
 import useOrdenesDeCompra from "../composables/useOrdenesDeCompra";
+import SearchInput from "@/components/SearchInput.vue";
+import Loading from "@/components/Loading.vue";
+import Pagination from "@/components/Pagination.vue";
+import ItemsPerPage from "@/components/ItemsPerPage.vue";
+import useUI from "@/modules/dashboard/composables/useUI";
+import { onUnmounted } from "vue";
 
 export default {
-  components: { Card, CardHeader, CardBody, TitleText, OrdenesDeCompraTable },
+  components: {
+    Card,
+    CardHeader,
+    CardBody,
+    TitleText,
+    OrdenesDeCompraTable,
+    SearchInput,
+    Loading,
+    Pagination,
+    ItemsPerPage,
+  },
   setup() {
     const { loadOrdenesDeCompra } = useOrdenesDeCompra();
 
+    const { pagination, isLoading, resetPagination } = useUI();
+
     loadOrdenesDeCompra();
+
+    onUnmounted(() => {
+      resetPagination();
+    });
+
+    return {
+      isLoading,
+      pagination,
+      loadOrdenesDeCompra,
+    };
   },
 };
 </script>

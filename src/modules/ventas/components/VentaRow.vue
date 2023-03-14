@@ -17,7 +17,10 @@
       <ViewIcon />
     </router-link>
     <router-link
-      :to="{ name: 'impresion-create', params: { type: 'ventas', id: venta.id } }"
+      :to="{
+        name: 'impresion-create',
+        params: { type: 'ventas', id: venta.id },
+      }"
       class="font-medium text-yellow-600 dark:text-yellow-500 hover:underline"
       ><i class="fa-solid fa-print"></i
     ></router-link>

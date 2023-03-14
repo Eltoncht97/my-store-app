@@ -3,11 +3,15 @@
 // }
 
 export const getVentas = ( state ) => {
-    return state.ventasFiltered
+    return state.ventas
 }
 
 export const getVenta = ( state ) => {
     return state.venta
+}
+
+export const getProduct = ( state ) => {
+    return state.product
 }
 
 export const getClients = ( state ) => {

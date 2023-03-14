@@ -32,7 +32,10 @@
             :showModal="showNewProveedorModal"
             @on:close="toggleModal"
           />
-          <p class="mt-2 text-sm text-red-600 dark:text-red-500" v-if="false">
+          <p
+            class="mt-2 text-sm text-red-600 dark:text-red-500"
+            v-if="v$.proveedor.$error"
+          >
             <span class="font-medium">El proveedor es requerido</span>
           </p>
         </div>
@@ -42,7 +45,10 @@
             v-model="ingreso.factura"
             placeholder="N° de Factura"
           />
-          <p class="mt-2 text-sm text-red-600 dark:text-red-500" v-if="false">
+          <p
+            class="mt-2 text-sm text-red-600 dark:text-red-500"
+            v-if="v$.factura.$error"
+          >
             <span class="font-medium">La factura es requerida</span>
           </p>
         </div>
@@ -210,6 +216,7 @@
           :products="ingreso.products"
           @on:edit="editProduct"
           @on:delete="deleteProduct"
+          :hiddenTotal="true"
         />
         <hr class="my-3" />
       </template>
@@ -289,6 +296,7 @@ export default {
       updateProduct,
       createIngreso,
       productToAdd,
+      v$,
     } = useOrdenesDeCompra();
 
     getProducts();
@@ -296,6 +304,7 @@ export default {
 
     return {
       ingreso,
+      v$,
       products,
       product,
       proveedores,
