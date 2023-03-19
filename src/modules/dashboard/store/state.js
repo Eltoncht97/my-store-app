@@ -9,6 +9,7 @@ export default function () {
     showNewReciboModal: false,
     showNewProveedorModal: false,
     showNewProductModal: false,
+    showNewTraspasoModal: false,
 
     pagination: {
       limit: 5,

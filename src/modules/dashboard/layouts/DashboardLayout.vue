@@ -10,9 +10,9 @@
         ><div class="flex items-center justify-center my-5 text-white">
           <router-link :to="{ name: 'venta-create' }" class="flex items-center">
             <img
-              src="https://flowbite.com/docs/images/logo.svg"
-              :class="`h-6 ${!isCollapsed && 'mr-3'} sm:h-9`"
-              alt="Flowbite Logo"
+              src="/pukis-icono.svg"
+              :class="`h-6 ${!isCollapsed && 'mr-3'} sm:h-9 rounded-sm`"
+              alt="Pukis Logo"
             />
             <span
               :class="`md:block self-center text-xl font-semibold whitespace-nowrap dark:text-white`"
@@ -36,13 +36,13 @@
 import { ref } from "vue";
 import { menu } from "@/utils/sideMenuRoutes";
 import { SidebarMenu } from "vue-sidebar-menu";
-import Navbar from '@/modules/dashboard/components/Navbar.vue'
+import Navbar from "@/modules/dashboard/components/Navbar.vue";
 import "vue-sidebar-menu/dist/vue-sidebar-menu.css";
 
 export default {
   components: {
     SidebarMenu,
-    Navbar
+    Navbar,
   },
   setup() {
     const isCollapsed = ref(true);
@@ -55,36 +55,6 @@ export default {
       },
     };
   },
-  // setup() {
-  //   const open = ref(false);
-
-  //   const items = [
-  //     { id: 1, label: "Dashboard", route: "/" },
-  //     {
-  //       id: 2,
-  //       label: "Clientes",
-  //       route: "/clientes",
-  //       roles: ["user", "admin"],
-  //     },
-  //     {
-  //       id: 3,
-  //       label: "Cuentas Clientes",
-  //       route: "/cuentas-clientes",
-  //       roles: ["user", "admin"],
-  //     },
-  //   ];
-
-  //   const toggleSidebar = () => {
-  //     open.value = !open.value;
-  //   };
-
-  //   return {
-  //     items,
-  //     open,
-  //     toggleSidebar,
-  //     routes,
-  //   };
-  // },
 };
 </script>
 

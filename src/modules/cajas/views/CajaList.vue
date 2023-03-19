@@ -2,23 +2,15 @@
   <Card>
     <CardHeader>
       <TitleText text="Cajas" />
-      <!-- <div class="flex">
-        <select
-          class="mr-2 pr-7 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-          v-model="filterSaldo"
-          @change="loadProveedores"
-        >
-          <option value="todos">Todos</option>
-          <option value="saldo">Con Saldo</option>
-        </select>
-        <LinkButton :to="{ name: 'proveedor-create' }" text="Nuevo" />
-      </div> -->
+      <button
+        class="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
+        @click="toggleModal('newTraspaso')"
+      >
+        Nuevo Traspaso
+      </button>
     </CardHeader>
     <CardBody>
-      <SearchInput
-        @on:filter="loadCajas"
-        v-model="pagination.filterTxt"
-      />
+      <SearchInput @on:filter="loadCajas" v-model="pagination.filterTxt" />
       <Loading v-if="isLoading" />
       <CajasTable v-else />
       <div
@@ -33,6 +25,10 @@
         />
         <ItemsPerPage v-model="pagination.limit" @on:select="loadCajas" />
       </div>
+      <CreateTraspasoModal
+        :showModal="showNewTraspasoModal"
+        @on:close="toggleModal"
+      />
     </CardBody>
   </Card>
 </template>
@@ -50,6 +46,7 @@ import Pagination from "@/components/Pagination.vue";
 import ItemsPerPage from "@/components/ItemsPerPage.vue";
 import { onUnmounted } from "vue";
 import useUI from "@/modules/dashboard/composables/useUI";
+import CreateTraspasoModal from "../components/CreateTraspasoModal.vue";
 
 export default {
   components: {
@@ -62,10 +59,17 @@ export default {
     Loading,
     Pagination,
     ItemsPerPage,
+    CreateTraspasoModal,
   },
   setup() {
     const { loadCajas } = useCajas();
-    const { pagination, isLoading, resetPagination } = useUI();
+    const {
+      pagination,
+      isLoading,
+      showNewTraspasoModal,
+      toggleModal,
+      resetPagination,
+    } = useUI();
 
     loadCajas();
 
@@ -75,9 +79,11 @@ export default {
 
     return {
       isLoading,
-      loadCajas,
       pagination,
-    }
+      showNewTraspasoModal,
+      loadCajas,
+      toggleModal,
+    };
   },
 };
 </script>

@@ -37,7 +37,7 @@
         <input
           type="number"
           id="saldo"
-          class="rounded-none rounded-r-lg bg-gray-50 border border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full dark:bg-gray-700 dark:text-white dark:border-gray-600 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          class="rounded-none rounded-r-lg bg-gray-50 border border-gray-300 text-sm focus:ring-blue-500 focus:border-blue-500 block w-full dark:bg-gray-700 dark:text-white dark:border-gray-600 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500"
           :class="{
             'text-gray-900': recibo.client.account.saldo === 0,
             'text-red-500': recibo.client.account.saldo < 0,

@@ -28,6 +28,10 @@ export function getShowNewProductModal(state) {
   return state.showNewProductModal;
 }
 
+export function getShowNewTraspasoModal(state) {
+  return state.showNewTraspasoModal;
+}
+
 export function getPagination(state) {
   return state.pagination;
 }

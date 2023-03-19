@@ -23,6 +23,9 @@ const useUI = () => {
     showNewProductModal: computed(
       () => store.getters["ui/getShowNewProductModal"]
     ),
+    showNewTraspasoModal: computed(
+      () => store.getters["ui/getShowNewTraspasoModal"]
+    ),
     pagination: computed(() => store.getters["ui/getPagination"]),
     toggleModal: (type) => store.commit("ui/toggleModal", { type }),
     resetPagination: () => store.commit("ui/resetPagination"),

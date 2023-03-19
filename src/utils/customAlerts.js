@@ -11,7 +11,7 @@ export const waringAlert = (params) => {
 };
 
 export const errorAlert = (params) => {
-  const { title = "Error!", text, type = "danger" } = params;
+  const { title = "Error!", text, type = "warning" } = params;
   return Swal.fire(title, text, type);
 };
 

@@ -4,7 +4,12 @@ export default () => ({
   informeCaja: {
     movimientos: [],
     ventas: [],
-    startDate: '',
-    endDate: ''
-  }
-})
+    startDate: "",
+    endDate: "",
+  },
+  traspasoForm: {
+    emisor: null,
+    receptor: null,
+    total: null,
+  },
+});

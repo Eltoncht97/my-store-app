@@ -15,3 +15,11 @@ export const setInformeCaja = (state, payload) => {
 export const resetCaja = (state) => {
   state.caja = null;
 };
+
+export const resetTraspaso = (state) => {
+  state.traspasoForm = {
+    emisor: null,
+    receptor: null,
+    total: null,
+  };
+};

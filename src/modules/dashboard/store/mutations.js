@@ -27,6 +27,9 @@ export function toggleModal(state, { type }) {
     case "newProduct":
       state.showNewProductModal = !state.showNewProductModal;
       break;
+    case "newTraspaso":
+      state.showNewTraspasoModal = !state.showNewTraspasoModal;
+      break;
   }
 }
 

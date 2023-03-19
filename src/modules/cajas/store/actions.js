@@ -72,3 +72,26 @@ export const getInformeCaja = async ({ commit }, dates) => {
     };
   }
 };
+
+export const createTraspaso = async (_, data) => {
+  try {
+    const resp = await pukisApi.post(
+      `/cajas/traspaso/${data.emisor.id}/${data.receptor.id}`,
+      { monto: Number(data.total) }
+    );
+
+    if (!resp.data) {
+      return {
+        ok: false,
+        message: "Hubo un error al crear el traspaso de cajas",
+      };
+    }
+
+    return { ok: true, message: "Traspaso de efectivo completado" };
+  } catch (error) {
+    return {
+      ok: false,
+      message: "Hubo un error al crear el traspaso de cajas",
+    };
+  }
+};
