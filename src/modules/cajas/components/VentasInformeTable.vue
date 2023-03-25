@@ -9,7 +9,7 @@
       <th scope="col" class="py-3 px-6 text-center">Opciones</th>
     </TableHead>
     <TableBody>
-      <TableRow v-for="venta in informeData.ventas[0]" :key="venta.id">
+      <TableRow v-for="venta in ventas" :key="venta.id">
         <VentaInformeRow :venta="venta" />
       </TableRow>
     </TableBody>
@@ -22,16 +22,15 @@ import TableBody from "@/components/TableBody.vue";
 import Table from "@/components/Table.vue";
 import VentaInformeRow from "./VentaInformeRow.vue";
 import TableHead from "@/components/TableHead.vue";
-import useCajas from "../composables/useCajas";
 
 export default {
   components: { VentaInformeRow, TableRow, TableBody, Table, TableHead },
+  props: {
+    ventas: {
+      type: Array
+    }
+  },
   setup() {
-    const { informeData } = useCajas();
-
-    return {
-      informeData,
-    };
   },
 };
 </script>

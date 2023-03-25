@@ -135,3 +135,28 @@ export const deleteVenta = async (_, id) => {
     return { ok: false, message: "Hubo un error al eliminar la venta" };
   }
 };
+
+export const getInformeVentas = async ({ commit }, dates) => {
+  try {
+    const response = await pukisApi.get(
+      `/ventas/report-ventas?startDate=${dates.startDate}&endDate=${dates.endDate}`,
+      { dates }
+    );
+
+    console.log(response);
+    if (!response.data) {
+      commit("setInformeVentas", null);
+      return;
+    }
+
+    commit("setInformeVentas", response.data);
+
+    return { ok: true };
+  } catch (error) {
+    console.log(error);
+    return {
+      ok: false,
+      message: "Hubo un error al cargar la data del informe de ventas",
+    };
+  }
+};

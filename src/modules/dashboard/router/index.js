@@ -11,6 +11,7 @@ import ordenesDeCompraRouter from "@/modules/ordenes-de-compra/router";
 import proveedoresRouter from "@/modules/proveedores/router";
 import cuentasProveedoresRouter from "@/modules/cuentas-proveedores/router";
 import pagosRouter from "@/modules/pagos/router";
+import informesRouter from "@/modules/informes/router";
 
 export default {
   name: "dashboard",
@@ -78,6 +79,10 @@ export default {
     {
       path: "/cuentas-proveedores/",
       ...cuentasProveedoresRouter,
+    },
+    {
+      path: "/informes/",
+      ...informesRouter,
     },
   ],
 };

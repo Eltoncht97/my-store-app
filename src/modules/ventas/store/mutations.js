@@ -48,3 +48,11 @@ export const resetModule = ( state ) => {
   state.clients = []
   state.products = []
 }
+
+export const setInformeVentas = (state, payload) => {
+  state.informeVentas.categories = {
+    labels: payload.categories.map(c => c.name),
+    counts: payload.categories.map(c => c.count),
+  };
+  state.informeVentas.ventas = payload.ventas;
+};

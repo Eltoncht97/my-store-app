@@ -63,8 +63,16 @@ export const menu = [
     icon: "fa-solid fa-chart-simple",
     child: [
       {
-        href: "/cajas/informe",
-        title: "Informe de cajas",
+        href: "/informes/caja",
+        title: "Informe de caja",
+      },
+      {
+        href: "/informes/ventas",
+        title: "Informe de ventas",
+      },
+      {
+        href: "/informes/compras",
+        title: "Informe de compras",
       },
     ],
   },

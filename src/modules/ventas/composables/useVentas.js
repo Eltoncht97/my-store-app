@@ -231,6 +231,17 @@ const useVentas = () => {
     venta.value.products = venta.value.products.filter((p) => p.id !== id);
   };
 
+  const loadInformeVentas = async (dates) => {
+    const formatedDates = { ...dates };
+    formatedDates.startDate = `${moment(formatedDates.startDate).format(
+      "MM-DD-YYYY"
+    )}T00:00:00Z`;
+    formatedDates.endDate = `${moment(formatedDates.endDate).format(
+      "MM-DD-YYYY"
+    )}T23:59:59Z`;
+    await store.dispatch("ventas/getInformeVentas", formatedDates);
+  };
+
   onMounted(() => {
     store.commit("ventas/resetVenta");
   });
@@ -260,6 +271,7 @@ const useVentas = () => {
     venta,
     ventas: computed(() => store.getters["ventas/getVentas"]),
     ventaShow: computed(() => store.getters["ventas/getVenta"]),
+    informeData: computed(() => store.getters["ventas/getInformeData"]),
 
     // Methods
     addProduct,
@@ -282,6 +294,7 @@ const useVentas = () => {
       (isPDiscountPercentage.value = !isPDiscountPercentage.value),
     updateProduct,
     createClientVenta,
+    loadInformeVentas,
   };
 };
 

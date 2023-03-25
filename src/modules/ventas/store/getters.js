@@ -21,3 +21,7 @@ export const getClients = ( state ) => {
 export const getProducts = ( state ) => {
     return state.products.map(product => ({...product, label: `${product.code} - ${product.name} - ${product.category.name} - $.${product.price}`}))
 }
+
+export const getInformeData = (state) => {
+    return state.informeVentas;
+  };
