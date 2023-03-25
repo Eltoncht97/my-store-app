@@ -60,7 +60,7 @@ export const getInformeCaja = async ({ commit }, dates) => {
 
     commit("setInformeCaja", {
       movimientos: response.data,
-      ventas: response2.data,
+      ventasRes: response2.data,
     });
 
     return { ok: true };

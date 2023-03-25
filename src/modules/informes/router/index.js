@@ -15,7 +15,7 @@ export default {
     {
       path: '/informes/compras',
       name: 'informe-compras',
-      component: () => import(/* webpackChunkName: "Informe Caja View" */ '@/modules/cajas/views/CajaInforme.vue'),
+      component: () => import(/* webpackChunkName: "Informe Compras View" */ '@/modules/informes/views/InformeCompras.vue'),
     },
   ]
 }

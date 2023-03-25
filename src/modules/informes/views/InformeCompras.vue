@@ -2,7 +2,7 @@
   <!-- Saldos de la caja  -->
   <Card>
     <CardHeader>
-      <TitleText text="INFORME DE CAJA" />
+      <TitleText text="INFORME DE COMPRAS" />
       <div class="flex gap-3">
         <div class="flex items-center">
           <label
@@ -17,7 +17,7 @@
             placeholder="Fecha de Inicio"
             required
             v-model="dates.startDate"
-            @change="loadInformeCaja(dates)"
+            @change="loadInformeCompras(dates)"
           />
         </div>
         <div class="flex items-center">
@@ -33,50 +33,55 @@
             placeholder="Fecha de Inicio"
             required
             v-model="dates.endDate"
-            @change="loadInformeCaja(dates)"
+            @change="loadInformeCompras(dates)"
           />
         </div>
       </div>
     </CardHeader>
   </Card>
-  <!-- Movimientos de la caja -->
-  <Card class="mt-5">
-    <CardHeader>
-      <TitleText text="Movimientos" />
-    </CardHeader>
-    <CardBody>
-      <MovimientosTable
-        v-if="informeData && informeData.movimientos.length > 0"
-        :movimientos="informeData.movimientos[0]"
-      />
-    </CardBody>
-  </Card>
-
   <!-- Ventas en el periodo -->
   <Card class="mt-5">
     <CardHeader>
-      <TitleText text="Ventas" />
+      <TitleText text="Ordenes de Compra" />
     </CardHeader>
     <CardBody>
-      <VentasInformeTable
-        v-if="informeData && informeData.ventas.length > 0"
-        :ventas="informeData.ventas"
+      <OrdenesDeCompraInformeTable
+        v-if="informeData && informeData.compras.length > 0"
+        :compras="informeData.compras"
+      />
+    </CardBody>
+  </Card>
+  <!-- Categorias vendidas -->
+  <Card class="mt-5">
+    <CardHeader>
+      <TitleText text="Familias" />
+    </CardHeader>
+    <CardBody>
+      <DoughnutChart
+        v-if="informeData && informeData.compras.length > 0"
+        label="T. Comprado $"
+        :labels="informeData.categories.labels"
+        :values="informeData.categories.counts"
+        :title="`Categorias Vendidas`"
       />
     </CardBody>
   </Card>
 </template>
 
 <script>
-import { ref } from "vue";
+import { ref } from 'vue';
 import moment from "moment";
 
 import Card from "@/components/Card.vue";
 import CardHeader from "@/components/CardHeader.vue";
 import CardBody from "@/components/CardBody.vue";
 import TitleText from "@/components/TitleText.vue";
-import MovimientosTable from "../components/MovimientosTable.vue";
-import useCajas from "../composables/useCajas";
-import VentasInformeTable from "../components/VentasInformeTable.vue";
+import DoughnutChart from "@/components/charts/DoughnutChart.vue";
+
+// import VentasInformeTable from "@/modules/cajas/components/VentasInformeTable.vue";
+// import OrdenesDeCompraInformeTable from "@/modules/o/components/VentasInformeTable.vue";
+import useOrdenesDeCompra from '@/modules/ordenes-de-compra/composables/useOrdenesDeCompra';
+import OrdenesDeCompraInformeTable from '../components/OrdenesDeCompraInformeTable.vue';
 
 export default {
   components: {
@@ -84,23 +89,22 @@ export default {
     CardHeader,
     CardBody,
     TitleText,
-    MovimientosTable,
-    VentasInformeTable,
-  },
+    // VentasInformeTable,
+    DoughnutChart,
+    OrdenesDeCompraInformeTable
+},
   setup() {
     const dates = ref({
-      startDate: moment().format("YYYY-MM-DD"),
+      startDate: moment().set("date",1).format("YYYY-MM-DD"),
       endDate: moment().format("YYYY-MM-DD"),
     });
-    const { caja, loadInformeCaja, informeData, resetCaja } = useCajas();
+    const { loadInformeCompras, informeData } = useOrdenesDeCompra();
 
-    loadInformeCaja(dates.value);
-    resetCaja();
+    loadInformeCompras(dates.value);
 
     return {
-      caja,
       dates,
-      loadInformeCaja,
+      loadInformeCompras,
       informeData,
     };
   },

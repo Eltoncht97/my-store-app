@@ -231,6 +231,17 @@ const useOrdenesDeCompra = () => {
     resetFormulario();
   };
 
+  const loadInformeCompras = async (dates) => {
+    const formatedDates = { ...dates };
+    formatedDates.startDate = `${moment(formatedDates.startDate).format(
+      "MM-DD-YYYY"
+    )}T00:00:00Z`;
+    formatedDates.endDate = `${moment(formatedDates.endDate).format(
+      "MM-DD-YYYY"
+    )}T23:59:59Z`;
+    await store.dispatch("ordenesDeCompra/getInformeCompras", formatedDates);
+  };
+
   return {
     ingreso,
     isEdit,
@@ -240,6 +251,9 @@ const useOrdenesDeCompra = () => {
     product,
     productToAdd,
     v$,
+    informeData: computed(() => store.getters["ordenesDeCompra/getInformeData"]),
+    totalComprasInforme: computed(() => store.getters["ordenesDeCompra/getTotalComprasInforme"]),
+
     addProduct,
     createIngreso,
     deleteProduct,
@@ -249,6 +263,7 @@ const useOrdenesDeCompra = () => {
     resetFormulario,
     togglePDiscountType,
     updateProduct,
+    loadInformeCompras,
   };
 };
 

@@ -9,7 +9,7 @@ export const setCaja = (state, payload) => {
 
 export const setInformeCaja = (state, payload) => {
   state.informeCaja.movimientos = payload.movimientos;
-  state.informeCaja.ventas = payload.ventas;
+  state.informeCaja.ventas = payload.ventasRes.ventas;
 };
 
 export const resetCaja = (state) => {

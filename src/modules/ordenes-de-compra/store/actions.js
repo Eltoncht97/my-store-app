@@ -94,3 +94,26 @@ export const createIngreso = async (_, data) => {
     };
   }
 };
+
+export const getInformeCompras = async ({ commit }, dates) => {
+  try {
+    const response = await pukisApi.get(
+      `/ordenes-ingreso/report-compras?startDate=${dates.startDate}&endDate=${dates.endDate}`);
+
+    console.log(response);
+    if (!response.data) {
+      commit("setInformeCompras", null);
+      return;
+    }
+
+    commit("setInformeCompras", response.data);
+
+    return { ok: true };
+  } catch (error) {
+    console.log(error);
+    return {
+      ok: false,
+      message: "Hubo un error al cargar la data del informe de compras",
+    };
+  }
+};
