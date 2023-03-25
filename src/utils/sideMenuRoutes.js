@@ -80,5 +80,6 @@ export const menu = [
     title: "Usuarios",
     icon: "fa-solid fa-users",
     href: "/usuarios",
+    role: 'gerente',
   },
 ];
