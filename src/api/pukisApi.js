@@ -1,8 +1,7 @@
 import axios from "axios";
 
 const pukisApi = axios.create({
-  baseURL: "https://pukis.herokuapp.com/api",
-  // baseURL: 'http://localhost:3000/api'
+  baseURL: process.env.VUE_APP_PUKIS_API_URL
 });
 
 pukisApi.interceptors.request.use((config) => {
