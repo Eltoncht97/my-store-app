@@ -10,13 +10,11 @@ export const setProduct = (state, product) => {
   state.product = {
     ...product,
     categoryId: product.category.id,
-    iva: computed(() => {
-      return (product.costWithoutIva * getIVAValue(product.ivaType)) / 100;
-    }),
+    iva: product.iva,
     costPrice: computed(
-      () => product.costWithoutIva - product.discount + product.iva
+      () => state.product.costWithoutIva - state.product.discount + state.product.iva
     ),
-    price: computed(() => product.costPrice + product.utilities),
+    price: computed(() => state.product.costPrice + state.product.utilities),
   };
 };
 

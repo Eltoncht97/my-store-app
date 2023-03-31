@@ -108,6 +108,42 @@ const useProducts = () => {
     loadProducts();
   };
 
+  //calculos
+  const calcDiscount = () => {
+    product.value.discount = Math.round(
+      (product.value.costWithoutIva * product.value.discountPercentage) / 100
+    );
+  };
+
+  const calcUtilities = () => {
+    product.value.utilities = Math.round(
+      (product.value.costPrice * product.value.utilitiesPercentage) / 100
+    );
+  };
+
+  const calcDiscountPercentage = () => {
+    product.value.discountPercentage = Math.round(
+      (product.value.discount * 100) / product.value.costWithoutIva
+    );
+  };
+
+  const calcIva = () => {
+    product.value.iva =
+      (product.value.costWithoutIva * getIVAValue(product.value.ivaType)) / 100;
+  };
+
+  const calcUtilitiesPercentage = () => {
+    product.value.utilitiesPercentage = Math.round(
+      (product.value.utilitiesPercentage * 100) / product.value.costPrice
+    );
+  };
+
+  const recalcValues = () => {
+    calcDiscount();
+    calcIva();
+    calcUtilities();
+  };
+
   return {
     createProduct,
     deleteProduct,
@@ -119,31 +155,12 @@ const useProducts = () => {
     product,
     products: computed(() => store.getters["products/getProducts"]),
     resetProduct: () => store.commit("products/resetProduct"),
-    calcDiscount: () => {
-      product.value.discount = Math.round(
-        (product.value.costWithoutIva * product.value.discountPercentage) / 100
-      );
-    },
-    calcUtilities: () => {
-      product.value.utilities = Math.round(
-        (product.value.costPrice * product.value.utilitiesPercentage) / 100
-      );
-    },
-    calcDiscountPercentage: () => {
-      product.value.discountPercentage = Math.round(
-        (product.value.discount * 100) / product.value.costWithoutIva
-      );
-    },
-    calcIva: () => {
-      product.value.iva =
-        (product.value.costWithoutIva * getIVAValue(product.value.ivaType)) /
-        100;
-    },
-    calcUtilitiesPercentage: () => {
-      product.value.utilitiesPercentage = Math.round(
-        (product.value.utilitiesPercentage * 100) / product.value.costPrice
-      );
-    },
+    calcDiscount,
+    calcUtilities,
+    calcDiscountPercentage,
+    calcIva,
+    calcUtilitiesPercentage,
+    recalcValues,
     pageCount: computed(() => store.getters["products/getTotalProducts"]),
     pagesCount: computed(() => store.getters["products/getProductPages"]),
   };

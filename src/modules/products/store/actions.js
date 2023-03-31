@@ -37,6 +37,8 @@ export const getProduct = async ({ commit }, id) => {
       return { ok: false, message: "Hubo un error al cargar el producto" };
     }
 
+    console.log({ product: response.data });
+
     commit("setProduct", response.data);
 
     return { ok: true };
