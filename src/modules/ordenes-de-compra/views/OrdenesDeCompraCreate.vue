@@ -267,6 +267,7 @@ import useOrdenesDeCompra from "../composables/useOrdenesDeCompra";
 import ProductsTable from "@/modules/ordenes-de-compra/components/ProductsTable.vue";
 import NewProveedorModal from "@/modules/proveedores/components/NewProveedorModal.vue";
 import NewProductModal from "@/modules/products/components/NewProductModal.vue";
+import useCategories from "@/modules/categories/composables/useCategories";
 
 export default {
   components: {
@@ -299,8 +300,12 @@ export default {
       v$,
     } = useOrdenesDeCompra();
 
+    const { loadCategories } = useCategories();
+
     getProducts();
     loadProveedores();
+
+    loadCategories({ limited: false });
 
     return {
       ingreso,
