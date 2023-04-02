@@ -111,9 +111,17 @@
             v-model="product"
             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 style-chooser"
             :options="products"
-            :selectable="(option) => option.stock > 0"
             label="label"
-          ></v-select>
+          >
+            <template v-slot:option="option">
+              {{ option.label }}
+              <span
+                v-if="option.stock == 0"
+                class="bg-red-100 text-red-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-red-900 dark:text-red-300"
+                >SIN STOCK</span
+              >
+            </template>
+          </v-select>
         </div>
       </div>
       <div class="grid gap-6 mb-6 md:grid-cols-4">
