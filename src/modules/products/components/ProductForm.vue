@@ -214,9 +214,9 @@ export default {
       recalcValues,
     } = useProducts();
 
-    const { loadCategories, categories } = useCategories();
+    const { categories } = useCategories();
 
-    loadCategories({ limited: false });
+    // loadCategories({ limited: false });
 
     return {
       product,

@@ -15,7 +15,7 @@
   >
     {{ caja.state === "Abierta" ? "Abierta" : "Cerrada" }}
   </td>
-  <td class="py-4 px-6">${{ caja.saldo }}</td>
+  <td class="py-4 px-6">${{ caja.efectivo }}</td>
   <td class="flex justify-center items-center py-4 px-6 space-x-3">
     <router-link
       :to="{ name: 'caja-show', params: { id: caja.id } }"

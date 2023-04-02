@@ -49,6 +49,8 @@ const useProducts = () => {
     if (!ok) return errorAlert({ text: message });
   };
 
+  const resetProduct = () => store.commit("products/resetProduct");
+
   const createProduct = async ({ redirect = true } = {}) => {
     if (!isValidForm(rules.value, v$.value)) return { ok: false };
 
@@ -63,6 +65,7 @@ const useProducts = () => {
     if (!ok) return errorAlert({ text: message });
 
     successAlert({ text: message });
+    resetProduct();
     loadProducts();
 
     if (!redirect) {
@@ -154,7 +157,7 @@ const useProducts = () => {
     categoryFilter,
     product,
     products: computed(() => store.getters["products/getProducts"]),
-    resetProduct: () => store.commit("products/resetProduct"),
+    resetProduct,
     calcDiscount,
     calcUtilities,
     calcDiscountPercentage,

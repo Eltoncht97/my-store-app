@@ -50,7 +50,7 @@ export function updateTotalItems(state, totalItems) {
 
 export function resetPagination(state) {
   state.pagination = {
-    limit: "5",
+    limit: "10",
     currentPage: 1,
     offset: 0,
     totalItems: 0,

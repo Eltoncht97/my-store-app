@@ -2,6 +2,7 @@
   <Card>
     <CardHeader>
       <TitleText text="Ventas" />
+      <LinkButton :to="{ name: 'venta-create' }" text="Nueva Venta" />
     </CardHeader>
     <CardBody>
       <SearchInput @on:filter="loadVentas" v-model="pagination.filterTxt" />
@@ -28,12 +29,13 @@ import Card from "@/components/Card.vue";
 import CardHeader from "@/components/CardHeader.vue";
 import CardBody from "@/components/CardBody.vue";
 import TitleText from "@/components/TitleText.vue";
-import VentasTable from "../components/VentasTable.vue";
-import useVentas from "../composables/useVentas";
 import SearchInput from "@/components/SearchInput.vue";
 import Loading from "@/components/Loading.vue";
 import Pagination from "@/components/Pagination.vue";
 import ItemsPerPage from "@/components/ItemsPerPage.vue";
+import LinkButton from "@/components/LinkButton.vue";
+import VentasTable from "../components/VentasTable.vue";
+import useVentas from "../composables/useVentas";
 import useUI from "@/modules/dashboard/composables/useUI";
 import { onUnmounted } from "vue";
 
@@ -48,6 +50,7 @@ export default {
     Loading,
     Pagination,
     ItemsPerPage,
+    LinkButton,
   },
   setup() {
     const { loadVentas, resetVenta } = useVentas();
