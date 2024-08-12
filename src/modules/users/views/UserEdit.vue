@@ -2,6 +2,7 @@
   <Card v-if="user">
     <CardHeader>
       <TitleText text="Editar Usuario" />
+      <button class="bg-green-600 p-2 rounded text-white" @click="toggleUpdatePassword">Actualizar contraseña</button>
     </CardHeader>
     <CardBody>
       <div class="grid gap-6 mb-6 md:grid-cols-2">
@@ -74,9 +75,15 @@
             </li>
           </ul>
         </div>
+        <Input
+          label="Nueva contraseña"
+          placeholder=""
+          v-model="user.password"
+          v-if="showUpdatePassword"
+        />
       </div>
       <div class="py-2">
-        <Button text="Guardar" @click="updateUser(user)" :loading="isLoading" />
+        <Button text="Guardar" @click="handleUpdateUser" :loading="isLoading" />
         <Button
           className="danger"
           text="Cancelar"
@@ -97,6 +104,7 @@ import Button from "@/components/Button.vue";
 import useUsers from "../composables/useUsers";
 import Input from "@/components/Input.vue";
 import TitleText from "@/components/TitleText.vue";
+import { ref } from "vue";
 
 export default {
   params: {
@@ -110,13 +118,29 @@ export default {
     const route = useRoute();
     const { id } = route.params;
     const { getUser, user, updateUser, isLoading } = useUsers();
+    const showUpdatePassword = ref(false)
+    const toggleUpdatePassword = () => {
+      user.value.password = ""
+      showUpdatePassword.value = !showUpdatePassword.value
+    };
 
     getUser(id);
+
+    const handleUpdateUser = () => {
+      if(showUpdatePassword.value && !user.value.password) {
+        alert('Nueva contraseña invalida')
+        return
+      }
+      updateUser(user.value, showUpdatePassword.value)
+    }
 
     return {
       user,
       isLoading,
       updateUser,
+      showUpdatePassword,
+      handleUpdateUser,
+      toggleUpdatePassword
     };
   },
 };

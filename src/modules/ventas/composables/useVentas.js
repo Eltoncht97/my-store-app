@@ -110,7 +110,7 @@ const useVentas = () => {
 
   const deleteVenta = async (id) => {
     const isConfirmed = await confirmAlert({
-      title: "Esta seguro de eliminar el proveedor?",
+      title: "Esta seguro de eliminar la venta?",
     });
 
     if (!isConfirmed) return;

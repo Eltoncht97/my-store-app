@@ -26,6 +26,7 @@ import TitleText from "@/components/TitleText.vue";
 import Button from "@/components/Button.vue";
 import ProductForm from "../components/ProductForm.vue";
 import useProducts from "../composables/useProducts";
+import useCategories from "@/modules/categories/composables/useCategories";
 import useUI from "@/modules/dashboard/composables/useUI";
 
 export default {
@@ -40,9 +41,11 @@ export default {
     const route = useRoute();
     const { id } = route.params;
     const { product, loadProduct, updateProduct } = useProducts();
+    const { loadCategories } = useCategories();
     const { isLoadingButton } = useUI();
 
     loadProduct(id);
+    loadCategories();
 
     return {
       product,

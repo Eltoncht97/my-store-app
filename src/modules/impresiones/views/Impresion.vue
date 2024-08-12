@@ -58,8 +58,10 @@ export default {
 <style scoped>
 .invoice-box {
   background-color: white;
-  margin: auto;
-  padding: 15px;
-  font-family: "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
+  /* margin: auto;
+  padding: 15px; */
+  width: 80mm;
+  font-size: 12px;
+  font-family: monospace, "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
 }
 </style>

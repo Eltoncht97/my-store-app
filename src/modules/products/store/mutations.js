@@ -7,6 +7,7 @@ export const setProducts = (state, products) => {
 };
 
 export const setProduct = (state, product) => {
+  console.log({product})
   state.product = {
     ...product,
     categoryId: product.category.id,
@@ -16,6 +17,7 @@ export const setProduct = (state, product) => {
     ),
     price: computed(() => state.product.costPrice + state.product.utilities),
   };
+  console.log({product})
 };
 
 export const resetProduct = (state) => {

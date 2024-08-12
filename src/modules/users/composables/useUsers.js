@@ -30,7 +30,12 @@ const useUsers = () => {
     }
   }
 
-  const updateUser = async ( user ) => {
+  const updateUser = async ( user, updatePassword ) => {
+    
+    if(!updatePassword && user.password) {
+      delete user.password
+    }
+
     const confirmUpdate = await Swal.fire({
       title: 'Esta seguro de actualizar el usuario?',
       text: "No se podra revertir esto!",

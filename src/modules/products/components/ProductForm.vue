@@ -215,6 +215,8 @@ export default {
     } = useProducts();
 
     const { categories } = useCategories();
+    console.log({product})
+    // console.log({categories})
 
     // loadCategories({ limited: false });
 
